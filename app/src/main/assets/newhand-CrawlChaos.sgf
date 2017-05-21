@@ -1,0 +1,74 @@
+(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]
+RU[Japanese]SZ[19]KM[6.50]TM[60]OT[3x20 byo-yomi]
+PW[newhand]PB[CrawlChaos]WR[4k]BR[2k]DT[2017-05-19]PC[The KGS Go Server at http://www.gokgs.com/]RE[W+Resign]
+;B[qc]BL[56.639]
+;W[cp]WL[50.748]
+;B[cc]BL[50.05]
+;W[qp]WL[37.025]
+;B[cq]BL[46.732]
+;W[dq]WL[33.664]
+;B[bp]BL[11.762]
+;W[cr]WL[21.075]
+;B[bq]BL[4.646]
+;W[co]WL[19.788]
+;B[dp]BL[20]OB[3]
+;W[dr]WL[20]OW[3]
+;B[cn]BL[20]OB[3]
+;W[bo]WL[20]OW[3]
+;B[do]BL[20]OB[3]
+;W[bn]WL[20]OW[3]
+(;B[cm]BL[20]OB[3]
+;W[bm]WL[20]OW[3]
+;B[bl]BL[20]OB[3]
+;W[br]WL[20]OW[3]
+;B[gq]BL[20]OB[3]C[CrawlChaos [2k\]: 誒幹
+]
+;W[dn]WL[20]OW[3]C[CrawlChaos [2k\]: 時間太短 很難想
+newhand [4k?\]: ..
+]
+;B[dm]BL[20]OB[3]
+;W[en]WL[20]OW[3]
+;B[fo]BL[20]OB[3]
+;W[em]WL[20]OW[3]
+;B[dk]BL[20]OB[3]
+;W[fp]WL[20]OW[3]
+;B[eo]BL[20]OB[3]
+;W[gm]WL[20]OW[3]
+;B[el]BL[20]OB[3]
+(;W[gn]WL[20]OW[3]
+;B[gp]BL[20]OB[3]
+;W[go]WL[20]OW[3]
+;B[fq]BL[20]OB[3]
+;W[eq]WL[20]OW[3]
+;B[ep]BL[20]OB[3]
+;W[jp]WL[20]OW[3]
+;B[ip]BL[20]OB[3]
+;W[io]WL[20]OW[3]
+;B[iq]BL[20]OB[3]
+;W[jq]WL[20]OW[3]
+;B[jr]BL[20]OB[3]
+;W[kr]WL[20]OW[3]
+;B[ho]BL[20]OB[3]
+;W[in]WL[20]OW[3]
+;B[ir]BL[20]OB[3]
+;W[fr]WL[20]OW[3]
+;B[kq]BL[20]OB[3]
+;W[lr]WL[20]OW[3]
+;B[lq]BL[20]OB[3]
+;W[mq]WL[20]OW[3]
+;B[lp]BL[20]OB[3]
+;W[ko]WL[20]OW[3]
+;B[nq]BL[20]OB[2]C[CrawlChaos [2k\]: 誒
+]
+;W[mp]WL[20]OW[3]C[newhand [4k?\]: 開局點小木33好像不是很好的選擇欸
+CrawlChaos [2k\]: 碰小目好像還是有一點勉強耶
+]
+;B[lo]BL[20]OB[1]C[newhand [4k?\]: 講白話點是有點低能啦
+newhand [4k?\]: ..
+newhand [4k?\]: 中間那塊會死嗎
+newhand [4k?\]: 會耶
+CrawlChaos [2k\]: 再來
+newhand [4k?\]: .
+])
+(;W[go]WL[20]OW[3]))
+(;B[bm]BL[20]OB[3]))
