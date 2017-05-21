@@ -24,8 +24,8 @@ public class SimulateChess extends View implements View.OnTouchListener {
     private Paint tBlackPaint; // 半透明黑棋
     private Paint tWhitePaint; // 半透明白棋
 
-    public SimulateChess(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+    public SimulateChess(Context context) {
+        super(context);
         init(context);
     }
 

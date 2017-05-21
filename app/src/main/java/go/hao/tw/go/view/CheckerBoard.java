@@ -38,8 +38,8 @@ public class CheckerBoard extends View {
     private int turns = 1; // 手數
     private byte[][] board = new byte[19][19];
 
-    public CheckerBoard(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+    public CheckerBoard(Context context) {
+        super(context);
         init();
     }
 

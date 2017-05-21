@@ -2,28 +2,24 @@ package go.hao.tw.go.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import go.hao.tw.go.App;
 import go.hao.tw.go.R;
-import go.hao.tw.go.view.CheckerBoard;
-import go.hao.tw.go.view.SimulateChess;
+import go.hao.tw.go.view.GoView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CheckerBoard checkerBoard;
-    private SimulateChess simulateChess;
+    private GoView goView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int w = App.screenWidth;
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(w, w);
-        checkerBoard = (CheckerBoard)findViewById(R.id.checkerBoard);
-        simulateChess = (SimulateChess)findViewById(R.id.simulateChess);
-        checkerBoard.setLayoutParams(params);
-        simulateChess.setLayoutParams(params);
+        goView = (GoView)findViewById(R.id.goView);
+        goView.setLayoutParams(new LinearLayout.LayoutParams(App.screenWidth, App.screenWidth));
     }
 }

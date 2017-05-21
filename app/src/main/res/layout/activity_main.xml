@@ -5,20 +5,10 @@
     android:background="@drawable/icon_board_back"
     android:orientation="vertical">
 
-    <FrameLayout
+    <go.hao.tw.go.view.GoView
+        android:id="@+id/goView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <go.hao.tw.go.view.CheckerBoard
-            android:id="@+id/checkerBoard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <go.hao.tw.go.view.SimulateChess
-            android:id="@+id/simulateChess"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </FrameLayout>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:layout_width="match_parent"
