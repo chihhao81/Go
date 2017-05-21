@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //
         goView = (GoView)findViewById(R.id.goView);
         goView.setLayoutParams(new LinearLayout.LayoutParams(App.screenWidth, App.screenWidth));
     }
