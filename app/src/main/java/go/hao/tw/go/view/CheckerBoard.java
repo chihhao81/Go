@@ -122,6 +122,18 @@ public class CheckerBoard extends BaseDataView {
         return goView.turns % 2 == 0 ? WHITE : BLACK;
     }
 
+    /** 將check的復原 */
+    private void resetCheck(){
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[i].length; j++){
+                if(board[i][j] == CHECK_BLACK)
+                    board[i][j] = BLACK;
+                else if(board[i][j] == CHECK_WHITE)
+                    board[i][j] = WHITE;
+            }
+        }
+    }
+
     /** 發出四個遞迴檢查上下左右的敵方棋子是不是沒氣了 */
     private boolean checkEatArount(int x, int y){
         boolean eat = false;
@@ -145,7 +157,7 @@ public class CheckerBoard extends BaseDataView {
         return eat;
     }
 
-    /** 遞迴的方式檢查對手是不是已經沒氣了, true = 都沒氣了 */
+    /** 遞迴的方式檢查對手是不是已經沒氣了, return true = 都沒氣了 */
     private boolean checkEat(int x, int y){
         if(outOfArray(x, y)) // 超過陣列範圍 牆壁是沒氣的
             return true;
@@ -155,9 +167,9 @@ public class CheckerBoard extends BaseDataView {
 
         if(now == BLANK) // 還有氣
             return false;
-        if(now == who) // 自己人 所以是沒氣
+        else if(now == who) // 自己人 所以是沒氣
             return true;
-        if(now == CHECK_WHITE || now == CHECK_BLACK) // 檢查過了
+        else if(now == CHECK_WHITE || now == CHECK_BLACK) // 檢查過了
             return true;
         if(board[x][y] == BLACK)
             board[x][y] = CHECK_BLACK;
@@ -183,8 +195,21 @@ public class CheckerBoard extends BaseDataView {
         eat(x+1, y);
     }
 
-    /** 禁止填海 */
+    /** 禁止填海, return true = 是自殺沒錯 */
     private boolean isSuicide(int x, int y){
+        if(outOfArray(x, y)) // 超過陣列範圍 牆壁是沒氣的
+            return true;
+
+        byte now = board[x][y]; // 目前檢查誰
+        if(now == BLANK) // 還有氣
+            return false;
+        else if(now == CHECK_WHITE || now == CHECK_BLACK) // 檢查過了
+            return true;
+        if(board[x][y] == BLACK)
+            board[x][y] = CHECK_BLACK;
+        else if(board[x][y] == WHITE)
+            board[x][y] = CHECK_WHITE;
+
         if(!checkEat(x, y-1) || !checkEat(x, y+1) || !checkEat(x-1, y) || !checkEat(x+1, y))
             return false;
         return true;
@@ -197,8 +222,9 @@ public class CheckerBoard extends BaseDataView {
             // 原本xy是1~19, 轉成陣列要的0~18
             if(board[x][y] == BLANK) {
                 board[x][y] = getWhoIsNowTruns();
-                if(!checkEatArount(x, y) && isSuicide(x, y)) { // 沒提子 又去填海
+                if(!checkEatArount(x, y) && isSuicide(x, y)) { // 沒提子還跑去填海
                     board[x][y] = BLANK;
+                    resetCheck();
                     return;
                 }
                 setNowXY(x, y);
