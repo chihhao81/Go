@@ -17,17 +17,20 @@ public class GoView extends FrameLayout {
     private CheckerBoard checkerBoard;
     private SimulateChess simulateChess;
 
+    public int turns = 1; // 手數
+
     public GoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
     private void init(Context context){
-        checkerBoard = new CheckerBoard(context);
-        simulateChess = new SimulateChess(context);
+        checkerBoard = new CheckerBoard(context, this);
+        simulateChess = new SimulateChess(context, this);
+
+        simulateChess.setOnSimulateCallback(checkerBoard.onSimulateCallback);
 
         addView(checkerBoard);
         addView(simulateChess);
-        invalidate();
     }
 }

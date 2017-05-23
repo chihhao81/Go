@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -17,17 +18,18 @@ import go.hao.tw.go.App;
  * Created by Hao on 2017/5/20.
  */
 
-public class CheckerBoard extends View {
-
-    public static final float SPACE = App.screenWidth / 20f;
-    public static final float RADIUS = SPACE / 2f - 1;
+public class CheckerBoard extends BaseDataView {
 
     private final float LINE_LENGTH = SPACE * 19; // 線的長度
-    private final int[] STARS_POSITION = new int[]{4, 10, 16}; // 星位位置
+    private final int[] STARS_POSITION = new int[]{3, 9, 15}; // 星位位置
     private final int TEXT_SIZE = 14; // 文字大小
     private final byte BLANK = 0;
     private final byte BLACK = 1;
     private final byte WHITE = 2;
+    private final byte CHECK_BLACK = 3;
+    private final byte CHECK_WHITE = 4;
+
+    private GoView goView;
 
     private Paint blackPaint;
     private Paint whitePaint;
@@ -35,11 +37,11 @@ public class CheckerBoard extends View {
 
     private List<Byte[][]> historyList = new ArrayList<>();
 
-    private int turns = 1; // 手數
     private byte[][] board = new byte[19][19];
 
-    public CheckerBoard(Context context) {
+    public CheckerBoard(Context context, GoView goView) {
         super(context);
+        this.goView = goView;
         init();
     }
 
@@ -57,9 +59,15 @@ public class CheckerBoard extends View {
         redPaint.setColor(Color.RED);
     }
 
-    /** 取得位置長度 */
-    private float getPosLength(int pos){
-        return SPACE * pos;
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        drawLine(canvas);
+        drawStar(canvas);
+        drawText(canvas);
+        drawChess(canvas);
+        drawRedPoint(canvas);
     }
 
     /** 畫線 */
@@ -88,12 +96,96 @@ public class CheckerBoard extends View {
         }
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        drawLine(canvas);
-        drawStar(canvas);
-        drawText(canvas);
+    /** 畫棋子 */
+    private void drawChess(Canvas canvas){
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[i].length; j++){
+                if(board[i][j] == BLANK)
+                    continue;
+                if(board[i][j] == CHECK_BLACK)
+                    board[i][j] = BLACK;
+                else if(board[i][j] == CHECK_WHITE)
+                    board[i][j] = WHITE;
+                drawChess(canvas, i, j, board[i][j]
+                        == BLACK ? blackPaint : whitePaint); // 把陣列的0~18轉成1~19
+            }
+        }
     }
+
+    /** 標示目前手的紅點 */
+    private void drawRedPoint(Canvas canvas){
+        if(nowX != -1 && nowY != -1)
+            canvas.drawCircle(getPosLength(nowX), getPosLength(nowY), RED_RADIUS, redPaint);
+    }
+
+    /** 目前手數輪到誰 */
+    private byte getWhoIsNowTruns(){
+        return goView.turns % 2 == 0 ? WHITE : BLACK;
+    }
+
+    /** 發出四個遞迴檢查上下左右的敵方棋子是不是沒氣了 */
+    private void checkEatArount(int x, int y){
+        if(checkEat(x, y-1)) // 上
+            eat(x, y-1);
+        if(checkEat(x, y+1)) // 下
+            eat(x, y+1);
+        if(checkEat(x-1, y)) // 左
+            eat(x-1, y);
+        if(checkEat(x+1, y)) // 右
+            eat(x+1, y);
+    }
+
+    /** 遞迴的方式檢查對手是不是已經沒氣了 */
+    private boolean checkEat(int x, int y){
+        if(x < 0 || x > 18 || y < 0 || y > 18) // 超過陣列範圍 牆壁是沒氣的
+            return true;
+
+        byte who = getWhoIsNowTruns(); // 目前輪到誰
+        byte now = board[x][y]; // 目前檢查誰
+        byte opponent = who == BLACK ? WHITE : BLACK; // 對手, 如果現在是黑下, 那對手就是白
+
+        if(now == BLANK) // 還有氣
+            return false;
+        if(now == who) // 自己人 所以是沒氣
+            return true;
+        if(now == CHECK_WHITE || now == CHECK_BLACK) // 檢查過了
+            return true;
+        if(board[x][y] == BLACK)
+            board[x][y] = CHECK_BLACK;
+        if(board[x][y] == WHITE)
+            board[x][y] = CHECK_WHITE;
+
+        if(!checkEat(x, y-1) || !checkEat(x, y+1) || !checkEat(x-1, y) || !checkEat(x+1, y))
+            return false;
+        return true;
+    }
+
+    /** 提子 */
+    private void eat(int x, int y){
+        if(x < 0 || x > 18 || y < 0 || y > 18) // 超過陣列範圍
+            return;
+        if(board[x][y] == getWhoIsNowTruns() || board[x][y] == BLANK) // 自己人或空的
+            return;
+
+        board[x][y] = BLANK;
+        eat(x, y-1);
+        eat(x, y+1);
+        eat(x-1, y);
+        eat(x+1, y);
+    }
+
+    /** 模擬落子的摳貝殼 */
+    public OnSimulateCallback onSimulateCallback = new OnSimulateCallback() {
+        @Override
+        public void simulate(int x, int y) {
+            // 原本xy是1~19, 轉成陣列要的0~18
+            if(board[x][y] == BLANK) {
+                board[x][y] = getWhoIsNowTruns();
+                checkEatArount(x, y);
+                setNowXY(x, y);
+                goView.turns++;
+                invalidate();
+            }
+        }
+    };
 }
