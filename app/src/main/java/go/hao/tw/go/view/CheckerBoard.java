@@ -4,15 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import go.hao.tw.go.App;
 
 /**
  * Created by Hao on 2017/5/20.
@@ -118,31 +112,46 @@ public class CheckerBoard extends BaseDataView {
             canvas.drawCircle(getPosLength(nowX), getPosLength(nowY), RED_RADIUS, redPaint);
     }
 
+    /** 超過陣列範圍 */
+    private boolean outOfArray(int x, int y){
+        return x < 0 || x > 18 || y < 0 || y > 18;
+    }
+
     /** 目前手數輪到誰 */
     private byte getWhoIsNowTruns(){
         return goView.turns % 2 == 0 ? WHITE : BLACK;
     }
 
     /** 發出四個遞迴檢查上下左右的敵方棋子是不是沒氣了 */
-    private void checkEatArount(int x, int y){
-        if(checkEat(x, y-1)) // 上
-            eat(x, y-1);
-        if(checkEat(x, y+1)) // 下
-            eat(x, y+1);
-        if(checkEat(x-1, y)) // 左
-            eat(x-1, y);
-        if(checkEat(x+1, y)) // 右
-            eat(x+1, y);
+    private boolean checkEatArount(int x, int y){
+        boolean eat = false;
+        if(checkEat(x, y-1)) { // 上
+            eat(x, y - 1);
+            eat = true;
+        }
+        if(checkEat(x, y+1)) { // 下
+            eat(x, y + 1);
+            eat = true;
+        }
+        if(checkEat(x-1, y)) { // 左
+            eat(x - 1, y);
+            eat = true;
+        }
+        if(checkEat(x+1, y)) { // 右
+            eat(x + 1, y);
+            eat = true;
+        }
+
+        return eat;
     }
 
-    /** 遞迴的方式檢查對手是不是已經沒氣了 */
+    /** 遞迴的方式檢查對手是不是已經沒氣了, true = 都沒氣了 */
     private boolean checkEat(int x, int y){
-        if(x < 0 || x > 18 || y < 0 || y > 18) // 超過陣列範圍 牆壁是沒氣的
+        if(outOfArray(x, y)) // 超過陣列範圍 牆壁是沒氣的
             return true;
 
         byte who = getWhoIsNowTruns(); // 目前輪到誰
         byte now = board[x][y]; // 目前檢查誰
-        byte opponent = who == BLACK ? WHITE : BLACK; // 對手, 如果現在是黑下, 那對手就是白
 
         if(now == BLANK) // 還有氣
             return false;
@@ -152,7 +161,7 @@ public class CheckerBoard extends BaseDataView {
             return true;
         if(board[x][y] == BLACK)
             board[x][y] = CHECK_BLACK;
-        if(board[x][y] == WHITE)
+        else if(board[x][y] == WHITE)
             board[x][y] = CHECK_WHITE;
 
         if(!checkEat(x, y-1) || !checkEat(x, y+1) || !checkEat(x-1, y) || !checkEat(x+1, y))
@@ -162,7 +171,7 @@ public class CheckerBoard extends BaseDataView {
 
     /** 提子 */
     private void eat(int x, int y){
-        if(x < 0 || x > 18 || y < 0 || y > 18) // 超過陣列範圍
+        if(outOfArray(x, y))
             return;
         if(board[x][y] == getWhoIsNowTruns() || board[x][y] == BLANK) // 自己人或空的
             return;
@@ -174,6 +183,13 @@ public class CheckerBoard extends BaseDataView {
         eat(x+1, y);
     }
 
+    /** 禁止填海 */
+    private boolean isSuicide(int x, int y){
+        if(!checkEat(x, y-1) || !checkEat(x, y+1) || !checkEat(x-1, y) || !checkEat(x+1, y))
+            return false;
+        return true;
+    }
+
     /** 模擬落子的摳貝殼 */
     public OnSimulateCallback onSimulateCallback = new OnSimulateCallback() {
         @Override
@@ -181,7 +197,10 @@ public class CheckerBoard extends BaseDataView {
             // 原本xy是1~19, 轉成陣列要的0~18
             if(board[x][y] == BLANK) {
                 board[x][y] = getWhoIsNowTruns();
-                checkEatArount(x, y);
+                if(!checkEatArount(x, y) && isSuicide(x, y)) { // 沒提子 又去填海
+                    board[x][y] = BLANK;
+                    return;
+                }
                 setNowXY(x, y);
                 goView.turns++;
                 invalidate();
