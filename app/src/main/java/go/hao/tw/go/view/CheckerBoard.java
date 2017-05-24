@@ -146,39 +146,33 @@ public class CheckerBoard extends BaseDataView {
     public boolean isTeamMate(int x, int y){
         if(outOfArray(x, y))
             return false;
-        else if(getWhoIsNowTruns() == BLACK)
-            return board[x][y] == BLACK || board[x][y] == CHECK_BLACK;
-        else
-            return board[x][y] == WHITE || board[x][y] == CHECK_WHITE;
+        return board[x][y] == getWhoIsNowTruns();
     }
 
     /** 檢查是不是對手 */
     public boolean isOpponent(int x, int y){
         if(outOfArray(x, y))
             return false;
-        else if(getWhoIsNowTruns() == BLACK)
-            return board[x][y] == WHITE || board[x][y] == CHECK_WHITE;
-        else
-            return board[x][y] == BLACK || board[x][y] == CHECK_BLACK;
+        return board[x][y] == getOpponent();
     }
 
     /** 發出四個遞迴檢查上下左右的敵方棋子是不是沒氣了 */
     private boolean checkArount(int x, int y) {
         boolean eat = false;
         checkType = getOpponent();
-        if (checkLife(x, y - 1)) { // 上
+        if (isOpponent(x, y - 1) && checkLife(x, y - 1)) { // 上
             eat(x, y - 1);
             eat = true;
         }
-        if (checkLife(x, y + 1)) { // 下
+        if (isOpponent(x, y + 1) && checkLife(x, y + 1)) { // 下
             eat(x, y + 1);
             eat = true;
         }
-        if (checkLife(x - 1, y)) { // 左
+        if (isOpponent(x - 1, y) && checkLife(x - 1, y)) { // 左
             eat(x - 1, y);
             eat = true;
         }
-        if (checkLife(x + 1, y)) { // 右
+        if (isOpponent(x + 1, y) && checkLife(x + 1, y)) { // 右
             eat(x + 1, y);
             eat = true;
         }
@@ -211,7 +205,7 @@ public class CheckerBoard extends BaseDataView {
             return false;
         else if(now == CHECK_WHITE || now == CHECK_BLACK) // 檢查過了
             return true;
-        else if(now != checkType)
+        else if(now != checkType) // 道不同 扣你一氣
             return true;
         if(board[x][y] == BLACK)
             board[x][y] = CHECK_BLACK;
