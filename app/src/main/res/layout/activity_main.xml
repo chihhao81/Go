@@ -8,12 +8,80 @@
     <go.hao.tw.go.view.GoView
         android:id="@+id/goView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="1dp" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="測試"
-        android:textSize="20sp"
-        android:textColor="#000"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnInit"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@color/btn_back"
+            android:text="|＜"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@color/btn_back"
+            android:text="＜＜"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnLast"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@color/btn_back"
+            android:text="＜"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@color/btn_back"
+            android:text="＞"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@color/btn_back"
+            android:text="＞＞"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@color/btn_back"
+            android:text="＞|"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="孝文好肥"
+        android:textColor="#000"
+        android:textSize="20sp" />
 </LinearLayout>

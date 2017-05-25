@@ -6,4 +6,5 @@
 
     <color name="trans_black">#55000000</color>
     <color name="trans_white">#99ffffff</color>
+    <color name="btn_back">#cdcdcd</color>
 </resources>

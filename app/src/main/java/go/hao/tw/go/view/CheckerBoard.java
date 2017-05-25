@@ -5,10 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by Hao on 2017/5/20.
@@ -31,10 +28,11 @@ public class CheckerBoard extends BaseDataView {
     private Paint whitePaint;
     private Paint redPaint; // 標示最新一手
 
-    private List<Byte[][]> historyList = new ArrayList<>();
+    private HashMap<Integer, HistoryInfo> historyList = new HashMap<>(); // 歷史紀錄
 
     private byte[][] board = new byte[19][19];
     private byte checkType; // 正在檢查什麼誰沒有氣
+    private int eat; // 吃幾顆
 
     public CheckerBoard(Context context, GoView goView) {
         super(context);
@@ -103,10 +101,11 @@ public class CheckerBoard extends BaseDataView {
                     board[i][j] = BLACK;
                 else if(board[i][j] == CHECK_WHITE)
                     board[i][j] = WHITE;
-                drawChess(canvas, i, j, board[i][j]
-                        == BLACK ? blackPaint : whitePaint); // 把陣列的0~18轉成1~19
+                drawChess(canvas, i, j, board[i][j] == BLACK ? blackPaint : whitePaint); // 把陣列的0~18轉成1~19
             }
         }
+
+        historyList.put(goView.turns-1, new HistoryInfo().build());
     }
 
     /** 標示目前手的紅點 */
@@ -130,6 +129,21 @@ public class CheckerBoard extends BaseDataView {
         return goView.turns % 2 == 0 ? BLACK : WHITE;
     }
 
+    /** 複製目前盤面到byte[][], -1 = now */
+    private byte[][] copyIndexBoard(int index){
+        byte[][] result = new byte[19][19];
+        byte[][] board;
+        if(index == -1)
+            board = this.board;
+        else
+            board = historyList.get(index).board;
+
+        for(int i = 0; i < board.length; i++)
+            for(int j = 0; j < board[i].length; j++)
+                result[i][j] = board[i][j];
+        return result;
+    }
+
     /** 將check的復原 */
     private void resetCheck(){
         for(int i = 0; i < board.length; i++){
@@ -143,14 +157,14 @@ public class CheckerBoard extends BaseDataView {
     }
 
     /** 檢查是不是隊友 */
-    public boolean isTeamMate(int x, int y){
+    private boolean isTeamMate(int x, int y){
         if(outOfArray(x, y))
             return false;
         return board[x][y] == getWhoIsNowTruns();
     }
 
     /** 檢查是不是對手 */
-    public boolean isOpponent(int x, int y){
+    private boolean isOpponent(int x, int y){
         if(outOfArray(x, y))
             return false;
         return board[x][y] == getOpponent();
@@ -158,77 +172,92 @@ public class CheckerBoard extends BaseDataView {
 
     /** 發出四個遞迴檢查上下左右的敵方棋子是不是沒氣了 */
     private boolean checkArount(int x, int y) {
-        boolean eat = false;
+        eat = 0;
         checkType = getOpponent();
-        if (isOpponent(x, y - 1) && checkLife(x, y - 1)) { // 上
-            eat(x, y - 1);
-            eat = true;
-        }
-        if (isOpponent(x, y + 1) && checkLife(x, y + 1)) { // 下
-            eat(x, y + 1);
-            eat = true;
-        }
-        if (isOpponent(x - 1, y) && checkLife(x - 1, y)) { // 左
-            eat(x - 1, y);
-            eat = true;
-        }
-        if (isOpponent(x + 1, y) && checkLife(x + 1, y)) { // 右
-            eat(x + 1, y);
-            eat = true;
-        }
+        if (checkEat(x, y-1)) // 上
+            eat += eat(x, y-1);
+        if (checkEat(x, y+1)) // 下
+            eat += eat(x, y+1);
+        if (checkEat(x-1, y)) // 左
+            eat += eat(x-1, y);
+        if (checkEat(x+1, y)) // 右
+            eat += eat(x+1, y);
 
-        // 都沒有提子 要檢查是不是跑去填海了
-        if(!eat){
+        // 都沒有提子 要檢查是不是跑去填海了 如果四周有隊友的話 以隊友的座標為出發點 不然會有錯QQ
+        if(eat == 0){
             checkType = getWhoIsNowTruns();
-            if(isTeamMate(x, y-1))
-                return checkLife(x, y-1);
-            else if(isTeamMate(x, y+1))
-                return checkLife(x, y+1);
-            else if(isTeamMate(x-1, y))
-                return checkLife(x-1, y);
-            else if(isTeamMate(x+1, y))
-                return checkLife(x+1, y);
-            else
-                return checkLife(x, y);
+            if(isTeamMate(x, y-1)) return isDead(x, y-1);
+            else if(isTeamMate(x, y+1)) return isDead(x, y+1);
+            else if(isTeamMate(x-1, y)) return isDead(x-1, y);
+            else if(isTeamMate(x+1, y)) return isDead(x+1, y);
+            else return isDead(x, y);
         }
         return false;
     }
 
-    /** 遞迴的方式檢查是不是沒氣了, return true = 沒氣了 */
-    private boolean checkLife(int x, int y){
+    private boolean checkEat(int x, int y){
+        return isOpponent(x, y) && isDead(x, y) && !isRobbery(x, y);
+    }
+
+    /** 是不是沒氣了 */
+    private boolean isDead(int x, int y){
+        return checkLife(x, y) == 0;
+    }
+
+    /** 判斷打劫 */
+    private boolean isRobbery(int x, int y){
+        HistoryInfo info = historyList.get(goView.turns-1);
+        return info.eat == 1 && info.x == x && info.y == y;
+    }
+
+    /** 遞迴的方式檢查還有幾氣 */
+    private int checkLife(int x, int y){
         if(outOfArray(x, y)) // 超過陣列範圍 牆壁是沒氣的
-            return true;
+            return 0;
 
         byte now = board[x][y]; // 目前檢查誰
 
         if(now == BLANK) // 還有氣
-            return false;
+            return 1;
         else if(now == CHECK_WHITE || now == CHECK_BLACK) // 檢查過了
-            return true;
+            return 0;
         else if(now != checkType) // 道不同 扣你一氣
-            return true;
+            return 0;
         if(board[x][y] == BLACK)
             board[x][y] = CHECK_BLACK;
         else if(board[x][y] == WHITE)
             board[x][y] = CHECK_WHITE;
 
-        if(!checkLife(x, y-1) || !checkLife(x, y+1) || !checkLife(x-1, y) || !checkLife(x+1, y))
-            return false;
-        return true;
+        return checkLife(x, y-1) + checkLife(x, y+1) + checkLife(x-1, y) + checkLife(x+1, y);
     }
 
     /** 提子 */
-    private void eat(int x, int y){
+    private int eat(int x, int y){
+        int eat = 1;
         if(outOfArray(x, y))
-            return;
+            return 0;
         if(board[x][y] == getWhoIsNowTruns() || board[x][y] == BLANK) // 自己人或空的
-            return;
+            return 0;
 
         board[x][y] = BLANK;
-        eat(x, y-1);
-        eat(x, y+1);
-        eat(x-1, y);
-        eat(x+1, y);
+        eat += eat(x, y-1) + eat(x, y+1) + eat(x-1, y) + eat(x+1, y);
+        return eat;
+    }
+
+    /** 清空棋盤 */
+    public void clear(){
+        historyList.clear();
+        board = new byte[19][19];
+        setNowXY(-1, -1);
+        invalidate();
+    }
+
+    /** 上一手 */
+    public void last(){
+        HistoryInfo info = historyList.get(goView.turns-1);
+        board = info.board;
+        setNowXY(info.x, info.y);
+        invalidate();
     }
 
     /** 模擬落子的摳貝殼 */
@@ -244,9 +273,23 @@ public class CheckerBoard extends BaseDataView {
                     return;
                 }
                 setNowXY(x, y);
-                goView.turns++;
                 invalidate();
+                goView.turns++;
             }
         }
     };
+
+    /** 歷史紀錄 */
+    private class HistoryInfo{
+        byte[][] board;
+        int x, y, eat;
+
+        HistoryInfo build(){
+            x = nowX;
+            y = nowY;
+            eat = CheckerBoard.this.eat;
+            board = copyIndexBoard(-1);
+            return this;
+        }
+    }
 }

@@ -33,4 +33,18 @@ public class GoView extends FrameLayout {
         addView(checkerBoard);
         addView(simulateChess);
     }
+
+    /** 清空棋盤 */
+    public void clear(){
+        turns = 1;
+        checkerBoard.clear();
+    }
+
+    /** 上一手 */
+    public void last(){
+        if(turns > 1) {
+            turns -= 1;
+            checkerBoard.last();
+        }
+    }
 }
