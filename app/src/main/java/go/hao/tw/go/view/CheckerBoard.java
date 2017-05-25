@@ -175,13 +175,13 @@ public class CheckerBoard extends BaseDataView {
         eat = 0;
         checkType = getOpponent();
         if (checkEat(x, y-1)) // 上
-            eat += eat(x, y-1);
+            eat(x, y-1);
         if (checkEat(x, y+1)) // 下
-            eat += eat(x, y+1);
+            eat(x, y+1);
         if (checkEat(x-1, y)) // 左
-            eat += eat(x-1, y);
+            eat(x-1, y);
         if (checkEat(x+1, y)) // 右
-            eat += eat(x+1, y);
+            eat(x+1, y);
 
         // 都沒有提子 要檢查是不是跑去填海了 如果四周有隊友的話 以隊友的座標為出發點 不然會有錯QQ
         if(eat == 0){
@@ -232,16 +232,18 @@ public class CheckerBoard extends BaseDataView {
     }
 
     /** 提子 */
-    private int eat(int x, int y){
-        int eat = 1;
+    private void eat(int x, int y){
         if(outOfArray(x, y))
-            return 0;
+            return;
         if(board[x][y] == getWhoIsNowTruns() || board[x][y] == BLANK) // 自己人或空的
-            return 0;
+            return;
 
         board[x][y] = BLANK;
-        eat += eat(x, y-1) + eat(x, y+1) + eat(x-1, y) + eat(x+1, y);
-        return eat;
+        eat += 1;
+        eat(x, y-1);
+        eat(x, y+1);
+        eat(x-1, y);
+        eat(x+1, y);
     }
 
     /** 清空棋盤 */
