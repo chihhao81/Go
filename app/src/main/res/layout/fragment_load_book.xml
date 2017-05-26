@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/icon_board_back"
+    android:orientation="vertical">
+
+    <go.hao.tw.go.view.GoView
+        android:id="@+id/goView"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnInit"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="|＜"
+            android:textSize="12sp" />
+
+        <Button
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="＜＜"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnLast"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="＜"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnNext"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="＞"
+            android:textSize="12sp" />
+
+        <Button
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="＞＞"
+            android:textSize="12sp" />
+
+        <Button
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="＞|"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+    </ScrollView>
+</LinearLayout>

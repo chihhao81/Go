@@ -9,4 +9,8 @@
     <string name="info_wr">白棋棋力：</string>
     <string name="info_br">黑棋棋力：</string>
     <string name="info_re">勝負：</string>
+
+    <string name="pk">對弈</string>
+    <string name="load_book">載入棋譜</string>
+    <string name="new_book">新增棋譜</string>
 </resources>
