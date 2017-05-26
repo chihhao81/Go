@@ -7,12 +7,15 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import go.hao.tw.go.App;
+import go.hao.tw.go.tools.ChessBook;
 
 /**
  * Created by Hao on 2017/5/21.
  */
 
 public class GoView extends FrameLayout {
+
+    private ChessBook chessBook;
 
     private CheckerBoard checkerBoard;
     private SimulateChess simulateChess;
@@ -34,6 +37,11 @@ public class GoView extends FrameLayout {
         addView(simulateChess);
     }
 
+    /** 設定棋譜 */
+    public void setChessBook(ChessBook chessBook){
+        this.chessBook = chessBook;
+    }
+
     /** 清空棋盤 */
     public void clear(){
         turns = 1;
@@ -45,6 +53,15 @@ public class GoView extends FrameLayout {
         if(turns > 1) {
             turns -= 1;
             checkerBoard.last();
+        }
+    }
+
+    /** 下一步 */
+    public void next(){
+        if(chessBook != null){
+            ChessBook.ChessBookInfo info = chessBook.getChessBookInfo(turns);
+            if(info != null)
+                checkerBoard.onSimulateCallback.simulate(info.x, info.y);
         }
     }
 }

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Go</string>
+
+    <!-- 對局資訊 -->
+    <string name="info_km">貼目：</string>
+    <string name="info_game_time">比賽時間：</string>
+    <string name="info_pw">白棋：</string>
+    <string name="info_pb">黑棋：</string>
+    <string name="info_wr">白棋棋力：</string>
+    <string name="info_br">黑棋棋力：</string>
+    <string name="info_re">勝負：</string>
 </resources>

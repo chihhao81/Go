@@ -48,6 +48,7 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/btnNext"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_margin="10dp"
@@ -78,10 +79,17 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="孝文好肥"
-        android:textColor="#000"
-        android:textSize="20sp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+    </ScrollView>
 </LinearLayout>
