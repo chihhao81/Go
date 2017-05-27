@@ -11,7 +11,7 @@ import go.hao.tw.go.R;
  * Created by chihhao on 2017/5/26.
  */
 
-public class ChessBook {
+public class SGFChessBook {
 
     private final String RU = "RU"; // 規則制度
     private final String SZ = "SZ"; // Size
@@ -33,8 +33,9 @@ public class ChessBook {
     private final int ASCII_LOW_A = 97; // ascii code a
 
     private HashMap<Integer, ChessBookInfo> hashMap = new HashMap<>();
+    private int maxTurns;
 
-    public ChessBook(String str){
+    public SGFChessBook(String str){
         Log.e("Hao", str);
         analysis(new StringBuffer(str));
     }
@@ -60,6 +61,7 @@ public class ChessBook {
             hashMap.put(turns, info);
             turns++;
         }
+        maxTurns = turns-1;
     }
 
     /** 取得比賽資訊 */
@@ -128,9 +130,21 @@ public class ChessBook {
         return src.substring(0, index);
     }
 
+    /** 取得結束手數 */
+    public int getMaxTurns(){
+        return maxTurns;
+    }
+
     /** 根據手數取得資訊 */
     public ChessBookInfo getChessBookInfo(int index){
         return hashMap.get(index);
+    }
+
+    /** 取得註解資訊 */
+    public String getMsg(int index){
+        if(hashMap.get(index) == null)
+            return "";
+        return hashMap.get(index).msg;
     }
 
     public class ChessBookInfo{

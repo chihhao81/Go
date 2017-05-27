@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/icon_board_back"
-    android:gravity="center"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnPK"
+            style="@style/NormalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pk" />
+
+        <Button
+            android:id="@+id/btnLoadBook"
+            style="@style/NormalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load_book" />
+
+        <Button
+            android:id="@+id/btnNewBook"
+            style="@style/NormalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_book" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/flContains"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/btnPK"
-        style="@style/NormalButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pk" />
-
-    <Button
-        android:id="@+id/btnLoadBook"
-        style="@style/NormalButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/load_book" />
-
-    <Button
-        android:id="@+id/btnNewBook"
-        style="@style/NormalButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/new_book" />
-</LinearLayout>
+</FrameLayout>

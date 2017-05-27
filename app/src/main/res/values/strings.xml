@@ -10,7 +10,13 @@
     <string name="info_br">黑棋棋力：</string>
     <string name="info_re">勝負：</string>
 
+    <!-- MainActivity-->
     <string name="pk">對弈</string>
     <string name="load_book">載入棋譜</string>
     <string name="new_book">新增棋譜</string>
+
+    <!-- LoadBookFragment -->
+    <string name="show_number">手數</string>
+    <string name="try_it">試下</string>
+    <string name="finish_try">請先結束試下</string>
 </resources>

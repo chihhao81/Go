@@ -4,10 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 
-import go.hao.tw.go.App;
-import go.hao.tw.go.tools.ChessBook;
+import go.hao.tw.go.tools.SGFChessBook;
 
 /**
  * Created by Hao on 2017/5/21.
@@ -15,12 +15,14 @@ import go.hao.tw.go.tools.ChessBook;
 
 public class GoView extends FrameLayout {
 
-    private ChessBook chessBook;
+    private SGFChessBook chessBook;
 
     private CheckerBoard checkerBoard;
     private SimulateChess simulateChess;
 
     public int turns = 1; // 手數
+    public int maxTurns; // 最後手數(打譜)
+    private int tryTurns; // 紀錄按下試下時的手數(打譜)
 
     public GoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -38,30 +40,47 @@ public class GoView extends FrameLayout {
     }
 
     /** 設定棋譜 */
-    public void setChessBook(ChessBook chessBook){
+    public void setChessBook(SGFChessBook chessBook){
         this.chessBook = chessBook;
+        simulateChess.setEnabled(false);
     }
 
     /** 清空棋盤 */
     public void clear(){
         turns = 1;
-        checkerBoard.clear();
+        checkerBoard.recovery(turns);
+    }
+
+    public void lastFive(){
+        turns = turns > 5 ? turns-5 : 1;
+        checkerBoard.recovery(turns);
     }
 
     /** 上一手 */
     public void last(){
-        if(turns > 1) {
-            turns -= 1;
-            checkerBoard.last();
-        }
+        turns = turns > 1 ? turns-1 : 1;
+        checkerBoard.recovery(turns);
     }
 
-    /** 下一步 */
-    public void next(){
-        if(chessBook != null){
-            ChessBook.ChessBookInfo info = chessBook.getChessBookInfo(turns);
+    /** 下N步 */
+    public void next(int next){
+        for(int i = 0; i < next; i++){
+            SGFChessBook.ChessBookInfo info = chessBook.getChessBookInfo(turns);
             if(info != null)
-                checkerBoard.onSimulateCallback.simulate(info.x, info.y);
+                checkerBoard.downHere(info.x, info.y);
+        }
+        checkerBoard.invalidate();
+    }
+
+    /** 試下 */
+    public void setTry(){
+        if(simulateChess.isEnabled()){ // 結束試下
+            turns = tryTurns;
+            checkerBoard.recovery(tryTurns);
+            simulateChess.setEnabled(false);
+        } else { // 開始試下
+            tryTurns = turns;
+            simulateChess.setEnabled(true);
         }
     }
 }

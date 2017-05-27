@@ -86,8 +86,8 @@ public class CheckerBoard extends BaseDataView {
     private void drawText(Canvas canvas){
         String[] ary = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"};
         for(int i = 0; i < 19; i++){
-            canvas.drawText(ary[i], getPosLength(i+1) - TEXT_SIZE/2, LINE_LENGTH + TEXT_SIZE, blackPaint);
-            canvas.drawText(""+(19-i), LINE_LENGTH + TEXT_SIZE, getPosLength(i+1) + TEXT_SIZE/2, blackPaint);
+            canvas.drawText(ary[i], getPosLength(i) - TEXT_SIZE/2, LINE_LENGTH + TEXT_SIZE, blackPaint);
+            canvas.drawText(""+(19-i), LINE_LENGTH + TEXT_SIZE, getPosLength(i) + TEXT_SIZE/2, blackPaint);
         }
     }
 
@@ -101,7 +101,8 @@ public class CheckerBoard extends BaseDataView {
                     board[i][j] = BLACK;
                 else if(board[i][j] == CHECK_WHITE)
                     board[i][j] = WHITE;
-                drawChess(canvas, i, j, board[i][j] == BLACK ? blackPaint : whitePaint); // 把陣列的0~18轉成1~19
+                if(canvas != null)
+                    drawChess(canvas, i, j, board[i][j] == BLACK ? blackPaint : whitePaint); // 把陣列的0~18轉成1~19
             }
         }
 
@@ -246,28 +247,36 @@ public class CheckerBoard extends BaseDataView {
         eat(x+1, y);
     }
 
-    /** 清空棋盤 */
-    public void clear(){
-        historyList.clear();
-        board = new byte[19][19];
-        setNowXY(-1, -1);
-        invalidate();
-    }
-
-    /** 上一手 */
-    public void last(){
-        HistoryInfo info = historyList.get(goView.turns-1);
+    /** 回到哪一手 */
+    public void recovery(int turns){
+        HistoryInfo info = historyList.get(turns-1);
+        if(info == null)
+            return;
         board = info.board;
         setNowXY(info.x, info.y);
         invalidate();
+    }
+
+    /** 指定落子, 前進手數用 */
+    public void downHere(int x, int y){
+        if(x != -1 && y != -1 && board[x][y] == BLANK) {
+            board[x][y] = getWhoIsNowTruns();
+            if(checkArount(x, y)) {
+                board[x][y] = BLANK;
+                resetCheck();
+                return;
+            }
+            setNowXY(x, y);
+            goView.turns++;
+            drawChess(null);
+        }
     }
 
     /** 模擬落子的摳貝殼 */
     public OnSimulateCallback onSimulateCallback = new OnSimulateCallback() {
         @Override
         public void simulate(int x, int y) {
-            // 原本xy是1~19, 轉成陣列要的0~18
-            if(board[x][y] == BLANK) {
+            if(x != -1 && y != -1 && board[x][y] == BLANK) {
                 board[x][y] = getWhoIsNowTruns();
                 if(checkArount(x, y)) {
                     board[x][y] = BLANK;

@@ -22,8 +22,6 @@ public class SimulateChess extends BaseDataView implements View.OnTouchListener 
 
     private OnSimulateCallback onSimulateCallback;
 
-    private boolean straight = false; // 時間太短就直接落子 不跟你演了
-
     public SimulateChess(Context context, GoView goView) {
         super(context);
         this.goView = goView;

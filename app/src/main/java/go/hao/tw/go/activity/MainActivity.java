@@ -2,21 +2,12 @@ package go.hao.tw.go.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import go.hao.tw.go.App;
 import go.hao.tw.go.R;
 import go.hao.tw.go.fragment.LoadBookFragment;
-import go.hao.tw.go.tools.ChessBook;
-import go.hao.tw.go.view.GoView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
