@@ -2,8 +2,6 @@ package go.hao.tw.go.tools;
 
 import android.util.Log;
 
-import java.util.HashMap;
-
 import go.hao.tw.go.App;
 import go.hao.tw.go.R;
 
@@ -11,7 +9,7 @@ import go.hao.tw.go.R;
  * Created by chihhao on 2017/5/26.
  */
 
-public class SGFChessBook {
+public class SGFChessBook extends ChessBook{
 
     private final String RU = "RU"; // 規則制度
     private final String SZ = "SZ"; // Size
@@ -25,15 +23,12 @@ public class SGFChessBook {
     private final String DT = "DT"; // 日期
     private final String PC = "PC"; // 呃 比賽資訊？
     private final String RE = "RE"; // Result
-    private final String B  = "B" ; // 黑棋
-    private final String W  = "W" ; // 白棋
+    private final String B  = "temp_black" ; // 黑棋
+    private final String W  = "temp_white" ; // 白棋
     private final String BL = "BL"; // 黑棋剩餘時間
     private final String WL = "WL"; // 白棋剩餘時間
     private final String C  = "C" ; // 註解
     private final int ASCII_LOW_A = 97; // ascii code a
-
-    private HashMap<Integer, ChessBookInfo> hashMap = new HashMap<>();
-    private int maxTurns;
 
     public SGFChessBook(String str){
         Log.e("Hao", str);
@@ -52,7 +47,7 @@ public class SGFChessBook {
             info.turns = turns;
             info.x = position.charAt(0) - ASCII_LOW_A;
             info.y = position.charAt(1) - ASCII_LOW_A;
-            if(getStringValue(str, C) != null){
+            if(getStringValue(str, C).length() > 0){
                 int indexStart = str.indexOf(C) + C.length() + 1;
                 int indexEnd = str.lastIndexOf("]");
                 info.msg = str.substring(indexStart, indexEnd);
@@ -124,33 +119,9 @@ public class SGFChessBook {
     private String getStringValue(String src, String key){
         int index = src.indexOf(key);
         if(index < 0)
-            return null;
+            return "";
         src = src.substring(index + key.length() + 1);
         index = src.indexOf("]");
         return src.substring(0, index);
-    }
-
-    /** 取得結束手數 */
-    public int getMaxTurns(){
-        return maxTurns;
-    }
-
-    /** 根據手數取得資訊 */
-    public ChessBookInfo getChessBookInfo(int index){
-        return hashMap.get(index);
-    }
-
-    /** 取得註解資訊 */
-    public String getMsg(int index){
-        if(hashMap.get(index) == null)
-            return "";
-        return hashMap.get(index).msg;
-    }
-
-    public class ChessBookInfo{
-        public int x, y;
-        public int turns;
-        public String time;
-        public String msg;
     }
 }

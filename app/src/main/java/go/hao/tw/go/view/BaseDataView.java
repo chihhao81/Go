@@ -13,7 +13,7 @@ import go.hao.tw.go.App;
 
 public abstract class BaseDataView extends View{
 
-    protected final float SPACE = App.screenWidth / 20f; // 格子間隔
+    public static final float SPACE = App.screenWidth / 20f; // 格子間隔
     protected final float RADIUS = SPACE / 2f - 1; // 棋子半徑
     protected final float RED_RADIUS = RADIUS / 3; // 棋子半徑
 

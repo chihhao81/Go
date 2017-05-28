@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/icon_board_back">
+
+    <ImageView
+        android:id="@+id/ivWhite"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_above="@+id/goView"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/temp_white" />
+
+    <LinearLayout
+        android:id="@+id/llWhiteMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/goView"
+        android:layout_toRightOf="@id/ivWhite"
+        android:orientation="horizontal"
+        android:rotation="180">
+
+        <Button
+            android:id="@+id/btnWhiteRegret"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="@string/regret"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnWhiteSurrender"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="@string/surrender"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnWhitePass"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="@string/pass"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llWhiteChoose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/llWhiteMenu"
+        android:layout_toRightOf="@id/ivWhite"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:rotation="180"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvWhiteInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnWhiteConfirm"
+            style="@style/NormalButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="O" />
+
+        <Button
+            android:id="@+id/btnWhiteCancel"
+            style="@style/NormalButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="X" />
+    </LinearLayout>
+
+    <go.hao.tw.go.view.GoView
+        android:id="@+id/goView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true" />
+
+    <ImageView
+        android:id="@+id/ivBlack"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/goView"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/temp_black" />
+
+    <LinearLayout
+        android:id="@+id/llBlackMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/goView"
+        android:layout_toLeftOf="@id/ivBlack"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnBlackRegret"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="@string/regret"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnBlackSurrender"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="@string/surrender"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnBlackPass"
+            style="@style/NormalButton"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="@string/pass"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llBlackChoose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llBlackMenu"
+        android:layout_toLeftOf="@id/ivBlack"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvBlackInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnBlackConfirm"
+            style="@style/NormalButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="O" />
+
+        <Button
+            android:id="@+id/btnBlackCancel"
+            style="@style/NormalButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="X" />
+    </LinearLayout>
+</RelativeLayout>

@@ -14,6 +14,13 @@
     <string name="pk">對弈</string>
     <string name="load_book">載入棋譜</string>
     <string name="new_book">新增棋譜</string>
+    
+    <!-- PKFragment -->
+    <string name="surrender">認輸</string>
+    <string name="sure_surrender">確定認輸？</string>
+    <string name="regret">悔棋</string>
+    <string name="sure_regret">是否讓對手悔棋？</string>
+    <string name="pass">棄權一手</string>
 
     <!-- LoadBookFragment -->
     <string name="show_number">手數</string>

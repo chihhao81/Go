@@ -83,4 +83,9 @@ public class GoView extends FrameLayout {
             simulateChess.setEnabled(true);
         }
     }
+
+    /** 虛手 */
+    public void pass(){
+
+    }
 }
