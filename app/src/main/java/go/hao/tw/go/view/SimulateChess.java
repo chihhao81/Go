@@ -7,6 +7,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import go.hao.tw.go.R;
 
 /**
@@ -17,23 +20,15 @@ public class SimulateChess extends BaseDataView implements View.OnTouchListener 
 
     private GoView goView;
 
-    private Paint tBlackPaint; // 半透明黑棋
-    private Paint tWhitePaint; // 半透明白棋
-
-    private OnSimulateCallback onSimulateCallback;
+    private List<OnSimulateListener> list = new ArrayList<>();
 
     public SimulateChess(Context context, GoView goView) {
         super(context);
         this.goView = goView;
-        init(context);
+        init();
     }
 
-    private void init(Context context){
-        tBlackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        tBlackPaint.setColor(ContextCompat.getColor(context, R.color.trans_black));
-        tWhitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        tWhitePaint.setColor(ContextCompat.getColor(context, R.color.trans_white));
-
+    private void init(){
         setOnTouchListener(this);
     }
 
@@ -51,14 +46,15 @@ public class SimulateChess extends BaseDataView implements View.OnTouchListener 
         }
     }
 
-    public void setOnSimulateCallback(OnSimulateCallback onSimulateCallback){
-        this.onSimulateCallback = onSimulateCallback;
+    public void addOnSimulateListener(OnSimulateListener onSimulateListener){
+        list.add(onSimulateListener);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawChess(canvas, nowX, nowY, goView.turns % 2 == 0 ? tWhitePaint : tBlackPaint);
+        if(nowX != -1 && nowY != -1)
+            drawChess(canvas, nowX, nowY, goView.turns % 2 == 0 ? tWhitePaint : tBlackPaint);
     }
 
     @Override
@@ -71,8 +67,9 @@ public class SimulateChess extends BaseDataView implements View.OnTouchListener 
                 setNowXY(event);
                 break;
             case MotionEvent.ACTION_UP:
-                if(onSimulateCallback != null && nowX > -1 && nowY > -1)
-                    onSimulateCallback.simulate(nowX, nowY);
+                if(list.size() > 0 && nowX > -1 && nowY > -1)
+                    for(OnSimulateListener callback : list)
+                        callback.simulate(nowX, nowY);
 
                 nowX = -1;
                 nowY = -1;

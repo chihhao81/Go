@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 
 import go.hao.tw.go.R;
 import go.hao.tw.go.fragment.LoadBookFragment;
+import go.hao.tw.go.fragment.NewBookFragment;
 import go.hao.tw.go.fragment.PKFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentManager.beginTransaction().replace(R.id.flContains, new LoadBookFragment()).commitAllowingStateLoss();
                 break;
             case R.id.btnNewBook:
+                fragmentManager.beginTransaction().replace(R.id.flContains, new NewBookFragment()).commitAllowingStateLoss();
                 break;
         }
         flContains.setVisibility(View.VISIBLE);

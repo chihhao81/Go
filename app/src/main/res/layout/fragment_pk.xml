@@ -66,15 +66,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:padding="10dp"
             android:textColor="@android:color/black"
             android:textSize="14sp" />
 
         <Button
             android:id="@+id/btnWhiteConfirm"
-            style="@style/NormalButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:text="O" />
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_try_back_selector"
+            android:text="O"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/btnWhiteCancel"
@@ -150,15 +153,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:padding="10dp"
             android:textColor="@android:color/black"
             android:textSize="14sp" />
 
         <Button
             android:id="@+id/btnBlackConfirm"
-            style="@style/NormalButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:text="O" />
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_try_back_selector"
+            android:text="O"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/btnBlackCancel"

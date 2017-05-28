@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.MotionEvent;
+import android.view.View;
 
 import java.util.HashMap;
 
@@ -15,7 +17,6 @@ public class CheckerBoard extends BaseDataView {
 
     private final float LINE_LENGTH = SPACE * 19; // 線的長度
     private final int[] STARS_POSITION = new int[]{3, 9, 15}; // 星位位置
-    private final int TEXT_SIZE = 14; // 文字大小
     private final byte BLANK = 0;
     private final byte BLACK = 1;
     private final byte WHITE = 2;
@@ -24,9 +25,7 @@ public class CheckerBoard extends BaseDataView {
 
     private GoView goView;
 
-    private Paint blackPaint;
-    private Paint whitePaint;
-    private Paint redPaint; // 標示最新一手
+    private OnTurnOverListener onTurnOverListener;
 
     private HashMap<Integer, HistoryInfo> historyList = new HashMap<>(); // 歷史紀錄
 
@@ -41,17 +40,6 @@ public class CheckerBoard extends BaseDataView {
     }
 
     private void init(){
-        blackPaint = new Paint();
-        blackPaint.setStrokeWidth(1);
-        blackPaint.setTextSize(TEXT_SIZE);
-        blackPaint.setColor(Color.BLACK);
-        blackPaint.setAntiAlias(true);
-
-        whitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        whitePaint.setColor(Color.WHITE);
-
-        redPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        redPaint.setColor(Color.RED);
     }
 
     @Override
@@ -102,7 +90,7 @@ public class CheckerBoard extends BaseDataView {
                 else if(board[i][j] == CHECK_WHITE)
                     board[i][j] = WHITE;
                 if(canvas != null)
-                    drawChess(canvas, i, j, board[i][j] == BLACK ? blackPaint : whitePaint); // 把陣列的0~18轉成1~19
+                    drawChess(canvas, i, j, board[i][j] == BLACK ? blackPaint : whitePaint);
             }
         }
 
@@ -122,12 +110,12 @@ public class CheckerBoard extends BaseDataView {
 
     /** 目前手數輪到誰 */
     private byte getWhoIsNowTruns(){
-        return goView.turns % 2 == 0 ? WHITE : BLACK;
+        return goView.isBlackTurn() ? BLACK : WHITE;
     }
 
     /** 目前手數對手是誰 */
     private byte getOpponent(){
-        return goView.turns % 2 == 0 ? BLACK : WHITE;
+        return goView.isBlackTurn() ? WHITE : BLACK;
     }
 
     /** 複製目前盤面到byte[][], -1 = now */
@@ -257,6 +245,15 @@ public class CheckerBoard extends BaseDataView {
         invalidate();
     }
 
+    /** 虛手 */
+    public void pass(){
+        setNowXY(-1, -1);
+        goView.turns++;
+        invalidate();
+        if(onTurnOverListener != null)
+            onTurnOverListener.onTurnOver(true);
+    }
+
     /** 指定落子, 前進手數用 */
     public void downHere(int x, int y){
         if(x != -1 && y != -1 && board[x][y] == BLANK) {
@@ -272,8 +269,18 @@ public class CheckerBoard extends BaseDataView {
         }
     }
 
+    /** 點選死去的棋子 */
+    public void getDeadChess(){
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+    }
+
     /** 模擬落子的摳貝殼 */
-    public OnSimulateCallback onSimulateCallback = new OnSimulateCallback() {
+    public OnSimulateListener onSimulateListener = new OnSimulateListener() {
         @Override
         public void simulate(int x, int y) {
             if(x != -1 && y != -1 && board[x][y] == BLANK) {
@@ -286,9 +293,19 @@ public class CheckerBoard extends BaseDataView {
                 setNowXY(x, y);
                 invalidate();
                 goView.turns++;
+                if(onTurnOverListener != null)
+                    onTurnOverListener.onTurnOver(false);
             }
         }
     };
+
+    public void setOnTurnOverListener(OnTurnOverListener onTurnOverListener){
+        this.onTurnOverListener = onTurnOverListener;
+    }
+
+    public interface OnTurnOverListener{
+        void onTurnOver(boolean pass);
+    }
 
     /** 歷史紀錄 */
     private class HistoryInfo{

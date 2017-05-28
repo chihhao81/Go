@@ -105,46 +105,46 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btnInit:
+            case R.id.btnInit: // 清空
                 if(isTrying())
                     return;
-                goView.clear();
+                goView.last(goView.turns);
                 tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns));
                 break;
-            case R.id.btnLastFive:
+            case R.id.btnLastFive: // 前五手
                 if(isTrying())
                     return;
-                goView.lastFive();
+                goView.last(5);
                 tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns));
                 break;
-            case R.id.btnLast:
+            case R.id.btnLast: // 前一手
                 if(isTrying())
                     return;
-                goView.last();
+                goView.last(1);
                 tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns));
                 break;
-            case R.id.btnNext:
+            case R.id.btnNext: // 下一手
                 if(isTrying())
                     return;
                 goView.next(1);
                 tvInfo.setText(chessBook.getMsg(goView.turns));
                 break;
-            case R.id.btnNextFive:
+            case R.id.btnNextFive: // 下五手
                 if(isTrying())
                     return;
                 goView.next(5);
                 tvInfo.setText(chessBook.getMsg(goView.turns));
                 break;
-            case R.id.btnEnd:
+            case R.id.btnEnd: // 最後一手
                 if(isTrying())
                     return;
                 goView.next(chessBook.getMaxTurns());
                 tvInfo.setText(chessBook.getMsg(chessBook.getMaxTurns()));
                 break;
-            case R.id.btnShowNumber:
+            case R.id.btnShowNumber: // 顯示手數
                 Toast.makeText(activity, "懶得做啦", Toast.LENGTH_SHORT).show();;
                 break;
-            case R.id.btnTry:
+            case R.id.btnTry: // 試下
                 goView.setTry();
                 btnTry.setSelected(!btnTry.isSelected());
                 break;

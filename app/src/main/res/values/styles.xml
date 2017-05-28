@@ -10,7 +10,7 @@
 
     <!-- 一般Button -->
     <style name="NormalButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@color/btn_back</item>
+        <item name="android:background">@drawable/btn_back_selector</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:layout_margin">10dp</item>
     </style>

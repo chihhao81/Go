@@ -12,19 +12,19 @@ import go.hao.tw.go.R;
 public class SGFChessBook extends ChessBook{
 
     private final String RU = "RU"; // 規則制度
-    private final String SZ = "SZ"; // Size
+    private final String SZ = "SZ"; // 棋盤規格
     private final String KM = "KM"; // 貼目
     private final String TM = "TM"; // 時間
     private final String OT = "OT"; // 加時
-    private final String PW = "PW"; // PlayWhite
-    private final String PB = "PB"; // PlayBlack
+    private final String PW = "PW"; // 白棋棋手
+    private final String PB = "PB"; // 黑棋棋手
     private final String WR = "WR"; // 白棋棋力
     private final String BR = "BR"; // 黑棋棋力
     private final String DT = "DT"; // 日期
-    private final String PC = "PC"; // 呃 比賽資訊？
-    private final String RE = "RE"; // Result
-    private final String B  = "temp_black" ; // 黑棋
-    private final String W  = "temp_white" ; // 白棋
+    private final String PC = "PC"; // 比賽地點
+    private final String RE = "RE"; // 結果
+    private final String B  = "B" ; // 黑棋
+    private final String W  = "W" ; // 白棋
     private final String BL = "BL"; // 黑棋剩餘時間
     private final String WL = "WL"; // 白棋剩餘時間
     private final String C  = "C" ; // 註解
@@ -42,6 +42,8 @@ public class SGFChessBook extends ChessBook{
             String str = getInfoString(stringBuffer);
             String key = turns % 2 == 0 ? W : B;
             String position = getStringValue(str, key);
+            if(position.isEmpty())
+                continue;
 
             ChessBookInfo info = new ChessBookInfo();
             info.turns = turns;

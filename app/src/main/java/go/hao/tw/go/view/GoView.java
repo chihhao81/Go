@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 import go.hao.tw.go.tools.SGFChessBook;
@@ -21,7 +20,6 @@ public class GoView extends FrameLayout {
     private SimulateChess simulateChess;
 
     public int turns = 1; // 手數
-    public int maxTurns; // 最後手數(打譜)
     private int tryTurns; // 紀錄按下試下時的手數(打譜)
 
     public GoView(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -33,7 +31,7 @@ public class GoView extends FrameLayout {
         checkerBoard = new CheckerBoard(context, this);
         simulateChess = new SimulateChess(context, this);
 
-        simulateChess.setOnSimulateCallback(checkerBoard.onSimulateCallback);
+        simulateChess.addOnSimulateListener(checkerBoard.onSimulateListener);
 
         addView(checkerBoard);
         addView(simulateChess);
@@ -45,20 +43,14 @@ public class GoView extends FrameLayout {
         simulateChess.setEnabled(false);
     }
 
-    /** 清空棋盤 */
-    public void clear(){
-        turns = 1;
-        checkerBoard.recovery(turns);
+    /** 黑棋的局? */
+    public boolean isBlackTurn(){
+        return turns % 2 == 1;
     }
 
-    public void lastFive(){
-        turns = turns > 5 ? turns-5 : 1;
-        checkerBoard.recovery(turns);
-    }
-
-    /** 上一手 */
-    public void last(){
-        turns = turns > 1 ? turns-1 : 1;
+    /** 上N手 */
+    public void last(int n){
+        turns = turns > n ? turns-n : 1;
         checkerBoard.recovery(turns);
     }
 
@@ -86,6 +78,21 @@ public class GoView extends FrameLayout {
 
     /** 虛手 */
     public void pass(){
+        checkerBoard.pass();
+    }
 
+    /** 結束 */
+    public void gameOver(){
+        simulateChess.setEnabled(false);
+    }
+
+    /** 復活啦 */
+    public void resurrection(){
+        simulateChess.setEnabled(true);
+    }
+
+    /** 每回合結束的監聽 */
+    public void setOnTurnOverListener(CheckerBoard.OnTurnOverListener listener){
+        checkerBoard.setOnTurnOverListener(listener);
     }
 }
