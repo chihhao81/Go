@@ -17,6 +17,8 @@ public abstract class BaseFragment extends Fragment{
 
     abstract protected void buildView();
 
+    abstract public boolean onBackPressed();
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

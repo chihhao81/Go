@@ -203,6 +203,11 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
     };
 
     @Override
+    public boolean onBackPressed() {
+        return true;
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnWhiteRegret: // 白悔棋

@@ -11,23 +11,23 @@ import go.hao.tw.go.R;
 
 public class SGFChessBook extends ChessBook{
 
-    private final String RU = "RU"; // 規則制度
-    private final String SZ = "SZ"; // 棋盤規格
-    private final String KM = "KM"; // 貼目
-    private final String TM = "TM"; // 時間
-    private final String OT = "OT"; // 加時
-    private final String PW = "PW"; // 白棋棋手
-    private final String PB = "PB"; // 黑棋棋手
-    private final String WR = "WR"; // 白棋棋力
-    private final String BR = "BR"; // 黑棋棋力
-    private final String DT = "DT"; // 日期
-    private final String PC = "PC"; // 比賽地點
-    private final String RE = "RE"; // 結果
-    private final String B  = "B" ; // 黑棋
-    private final String W  = "W" ; // 白棋
-    private final String BL = "BL"; // 黑棋剩餘時間
-    private final String WL = "WL"; // 白棋剩餘時間
-    private final String C  = "C" ; // 註解
+    private final String RU = "RU["; // 規則制度
+    private final String SZ = "SZ["; // 棋盤規格
+    private final String KM = "KM["; // 貼目
+    private final String TM = "TM["; // 時間
+    private final String OT = "OT["; // 加時
+    private final String PW = "PW["; // 白棋棋手
+    private final String PB = "PB["; // 黑棋棋手
+    private final String WR = "WR["; // 白棋棋力
+    private final String BR = "BR["; // 黑棋棋力
+    private final String DT = "DT["; // 日期
+    private final String PC = "PC["; // 比賽地點
+    private final String RE = "RE["; // 結果
+    private final String B  = ";B["; // 黑棋
+    private final String W  = ";W["; // 白棋
+    private final String BL = "BL["; // 黑棋剩餘時間
+    private final String WL = "WL["; // 白棋剩餘時間
+    private final String C  = "]C["; // 註解
     private final int ASCII_LOW_A = 97; // ascii code a
 
     public SGFChessBook(String str){
@@ -39,18 +39,20 @@ public class SGFChessBook extends ChessBook{
         int turns = 1;
         getGameContent(stringBuffer);
         while(stringBuffer.indexOf(";") >= 0){
+            if(turns == 127)
+                System.out.println();
             String str = getInfoString(stringBuffer);
             String key = turns % 2 == 0 ? W : B;
             String position = getStringValue(str, key);
-            if(position.isEmpty())
+            if(position.isEmpty() || (position.contains("(")) && position.contains(")"))
                 continue;
 
             ChessBookInfo info = new ChessBookInfo();
             info.turns = turns;
             info.x = position.charAt(0) - ASCII_LOW_A;
             info.y = position.charAt(1) - ASCII_LOW_A;
-            if(getStringValue(str, C).length() > 0){
-                int indexStart = str.indexOf(C) + C.length() + 1;
+            if(!getStringValue(str, C).isEmpty()){
+                int indexStart = str.indexOf(C) + C.length();
                 int indexEnd = str.lastIndexOf("]");
                 info.msg = str.substring(indexStart, indexEnd);
             }
@@ -63,7 +65,9 @@ public class SGFChessBook extends ChessBook{
 
     /** 取得比賽資訊 */
     private void getGameContent(StringBuffer stringBuffer){
-        String str = getInfoString(stringBuffer);
+        stringBuffer.delete(0, stringBuffer.indexOf(";")+1);
+        String str = stringBuffer.substring(0, stringBuffer.indexOf(";"));
+        stringBuffer.delete(0, stringBuffer.indexOf(";"));
         ChessBookInfo info = new ChessBookInfo();
         info.x = -1;
         info.y = -1;
@@ -95,26 +99,37 @@ public class SGFChessBook extends ChessBook{
                 .append(String.format("(%s)\n", getStringValue(str, WR)));
         // 比賽時間
         result.append(time).append("\n");
+        // 貼目
+        result.append(App.context.getString(R.string.info_km)).append(Float.parseFloat(getStringValue(str, KM))).append("\n");
         // 比賽結果
         result.append(App.context.getString(R.string.info_re)).append(getStringValue(str, RE));
+        // 註解
+        if(!getStringValue(str, C).isEmpty()) {
+            int indexStart = str.indexOf(C) + C.length();
+
+            String temp = str.substring(indexStart);
+            int tempIndex = temp.indexOf(":");
+            temp = temp.substring(tempIndex);
+            int indexEnd = indexStart+tempIndex+temp.indexOf("]");
+
+            result.append("\n\n").append(str.substring(indexStart, indexEnd));
+        }
 
         return result.toString();
     }
 
     /** 取得這次資訊 */
-    private String getInfoString(StringBuffer stringBuffer){
-        int index = stringBuffer.indexOf(";");
-
-        if(index >= 0)
-            stringBuffer.delete(0, index+1);
-        else
+    private String getInfoString(StringBuffer stringBuffer) {
+        int index = stringBuffer.deleteCharAt(0).indexOf(";");
+        if (index >= 0) {
+            String s = ";"+stringBuffer.substring(0, index);
+            stringBuffer.delete(0, index);
+            return s;
+        } else if(stringBuffer.length() > 0){
+            return ";"+stringBuffer.toString();
+        } else {
             return "";
-
-        index = stringBuffer.indexOf(";");
-        if(index >= 0)
-            return stringBuffer.substring(0, index);
-        else
-            return stringBuffer.toString();
+        }
     }
 
     /** 根據key取值 */
@@ -122,7 +137,7 @@ public class SGFChessBook extends ChessBook{
         int index = src.indexOf(key);
         if(index < 0)
             return "";
-        src = src.substring(index + key.length() + 1);
+        src = src.substring(index + key.length());
         index = src.indexOf("]");
         return src.substring(0, index);
     }

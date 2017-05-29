@@ -25,4 +25,9 @@ public class NewBookFragment extends BaseFragment {
     protected void buildView() {
 
     }
+
+    @Override
+    public boolean onBackPressed() {
+        return true;
+    }
 }

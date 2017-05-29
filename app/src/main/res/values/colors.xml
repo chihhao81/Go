@@ -8,4 +8,11 @@
     <color name="trans_white">#99ffffff</color>
     <color name="btn_back">#cdcdcd</color>
     <color name="btn_back_down">#787878</color>
+
+    <color name="yellow1">#ffaa33</color>
+    <color name="yellow2">#ffff00</color>
+    <color name="blue1">#0066FF</color>
+    <color name="blue2">#74c1cd</color>
+
+    <color name="recycler_back">#efe7c9</color>
 </resources>

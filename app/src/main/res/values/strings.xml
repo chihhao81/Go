@@ -28,4 +28,8 @@
     <string name="show_number">手數</string>
     <string name="try_it">試下</string>
     <string name="finish_try">請先結束試下</string>
+
+    <!-- SelectFileAdapter -->
+    <string name="file_name">檔案名稱</string>
+    <string name="select_sgf">請選擇sgf檔</string>
 </resources>

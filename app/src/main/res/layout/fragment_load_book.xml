@@ -5,6 +5,28 @@
     android:background="@drawable/icon_board_back"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/llSelectFile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/blue2"
+            android:gravity="center"
+            android:text="@string/select_sgf"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
     <go.hao.tw.go.view.GoView
         android:id="@+id/goView"
         android:layout_width="wrap_content"

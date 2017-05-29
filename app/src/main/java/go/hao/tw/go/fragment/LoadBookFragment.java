@@ -2,6 +2,8 @@ package go.hao.tw.go.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,10 @@ import java.io.InputStream;
 
 import go.hao.tw.go.App;
 import go.hao.tw.go.R;
+import go.hao.tw.go.adapter.SelectFileAdapter;
 import go.hao.tw.go.tools.SGFChessBook;
+import go.hao.tw.go.tools.SpacesItemDecoration;
+import go.hao.tw.go.view.CheckerBoard;
 import go.hao.tw.go.view.GoView;
 
 /**
@@ -24,18 +29,16 @@ import go.hao.tw.go.view.GoView;
 
 public class LoadBookFragment extends BaseFragment implements View.OnClickListener {
 
+    private LinearLayout llSelectFile;
     private GoView goView;
-    private Button btnInit;
-    private Button btnLastFive;
-    private Button btnLast;
-    private Button btnNext;
-    private Button btnNextFive;
-    private Button btnEnd;
-    private Button btnShowNumber;
-    private Button btnTry;
+    private Button btnInit, btnLastFive, btnLast;
+    private Button btnNext, btnNextFive, btnEnd;
+    private Button btnShowNumber, btnTry;
     private TextView tvInfo;
+    private RecyclerView recyclerView;
 
     private SGFChessBook chessBook;
+    private SelectFileAdapter adapter;
 
     public LoadBookFragment(){}
 
@@ -51,6 +54,7 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected void buildView() {
+        llSelectFile = (LinearLayout)findViewById(R.id.llSelectFile);
         goView = (GoView)findViewById(R.id.goView);
         btnInit = (Button)findViewById(R.id.btnInit);
         btnLastFive = (Button)findViewById(R.id.btnLastFive);
@@ -61,12 +65,13 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
         btnShowNumber = (Button)findViewById(R.id.btnShowNumber);
         btnTry = (Button)findViewById(R.id.btnTry);
         tvInfo = (TextView)findViewById(R.id.tvInfo);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
 
-        chessBook = getSgf("newhand-CrawlChaos.sgf");
-
-        goView.setLayoutParams(new LinearLayout.LayoutParams(App.screenWidth, App.screenWidth));
-        goView.setChessBook(chessBook);
-        tvInfo.setText(chessBook.getChessBookInfo(0).msg);
+        adapter = new SelectFileAdapter(activity);
+        adapter.setOnSGFSelectedListener(onSGFSelectedListener);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.addItemDecoration(new SpacesItemDecoration(0, 1, 0, 1));
+        recyclerView.setAdapter(adapter);
 
         btnInit.setOnClickListener(this);
         btnLastFive.setOnClickListener(this);
@@ -100,6 +105,29 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
             return false;
         Toast.makeText(activity, activity.getString(R.string.finish_try), Toast.LENGTH_SHORT).show();
         return true;
+    }
+
+    /** 選擇檔案 */
+    public SelectFileAdapter.OnSGFSelectedListener onSGFSelectedListener = new SelectFileAdapter.OnSGFSelectedListener() {
+        @Override
+        public void onSelect(SGFChessBook chessBook) {
+            LoadBookFragment.this.chessBook = chessBook;
+            goView.setLayoutParams(new LinearLayout.LayoutParams(App.screenWidth, App.screenWidth));
+            goView.setChessBook(chessBook);
+            tvInfo.setText(chessBook.getChessBookInfo(0).msg);
+            llSelectFile.setVisibility(View.GONE);
+        }
+    };
+
+    @Override
+    public boolean onBackPressed() {
+        if(llSelectFile.isShown())
+            return adapter.back();
+        else {
+            goView.last(goView.turns);
+            llSelectFile.setVisibility(View.VISIBLE);
+            return false;
+        }
     }
 
     @Override
