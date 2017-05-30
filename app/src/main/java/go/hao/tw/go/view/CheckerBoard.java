@@ -20,8 +20,9 @@ public class CheckerBoard extends BaseDataView {
     private final byte BLANK = 0;
     private final byte BLACK = 1;
     private final byte WHITE = 2;
-    private final byte CHECK_BLACK = 3;
-    private final byte CHECK_WHITE = 4;
+    private final byte CHECK_BLANK = 3;
+    private final byte CHECK_BLACK = 4;
+    private final byte CHECK_WHITE = 5;
 
     private GoView goView;
 
@@ -32,6 +33,7 @@ public class CheckerBoard extends BaseDataView {
     private byte[][] board = new byte[19][19];
     private byte checkType; // 正在檢查什麼誰沒有氣
     private int eat; // 吃幾顆
+    private boolean ggMode = false; // 是不是在點選死子模式
 
     public CheckerBoard(Context context, GoView goView) {
         super(context);
@@ -82,15 +84,32 @@ public class CheckerBoard extends BaseDataView {
     /** 畫棋子 */
     private void drawChess(Canvas canvas){
         for(int i = 0; i < board.length; i++){
-            for(int j = 0; j < board[i].length; j++){
-                if(board[i][j] == BLANK)
+            for(int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == CHECK_BLANK)
+                    board[i][j] = BLANK;
+                if (board[i][j] == BLANK)
                     continue;
-                if(board[i][j] == CHECK_BLACK)
-                    board[i][j] = BLACK;
-                else if(board[i][j] == CHECK_WHITE)
-                    board[i][j] = WHITE;
-                if(canvas != null)
-                    drawChess(canvas, i, j, board[i][j] == BLACK ? blackPaint : whitePaint);
+
+                if (ggMode) {
+                    Paint paint;
+                    if(board[i][j] == BLACK)
+                        paint = blackPaint;
+                    else if(board[i][j] == WHITE)
+                        paint = whitePaint;
+                    else if(board[i][j] == CHECK_BLACK)
+                        paint = tBlackPaint;
+                    else
+                        paint = tWhitePaint;
+
+                    drawChess(canvas, i, j, paint);
+                } else {
+                    if (board[i][j] == CHECK_BLACK)
+                        board[i][j] = BLACK;
+                    else if (board[i][j] == CHECK_WHITE)
+                        board[i][j] = WHITE;
+                    if (canvas != null)
+                        drawChess(canvas, i, j, board[i][j] == BLACK ? blackPaint : whitePaint);
+                }
             }
         }
 
@@ -157,6 +176,15 @@ public class CheckerBoard extends BaseDataView {
         if(outOfArray(x, y))
             return false;
         return board[x][y] == getOpponent();
+    }
+
+    /** 檢查是不是對手 */
+    private boolean isOpponent(byte myself, byte opp){
+        if(myself == BLACK || myself == CHECK_BLACK)
+            return opp == WHITE || opp == CHECK_WHITE;
+        else if(myself == WHITE || myself == CHECK_WHITE)
+            return opp == BLACK || opp == CHECK_BLACK;
+        return myself == CHECK_BLANK;
     }
 
     /** 發出四個遞迴檢查上下左右的敵方棋子是不是沒氣了 */
@@ -235,6 +263,41 @@ public class CheckerBoard extends BaseDataView {
         eat(x+1, y);
     }
 
+    /** 設為死子 */
+    private void setDeadChess(int x, int y, byte type){
+        if(outOfArray(x, y))
+            return;
+
+        byte now = board[x][y];
+
+        if(isOpponent(now, type))
+            return;
+        else if((type == BLACK && now == CHECK_BLACK) || (type == CHECK_BLACK && now == BLACK))
+            return;
+        else if((type == WHITE && now == CHECK_WHITE) || (type == CHECK_WHITE && now == WHITE))
+            return;
+        else if(now == CHECK_BLANK)
+            return;
+
+        if(now == type){
+            if(type == BLACK)
+                board[x][y] = CHECK_BLACK;
+            else if(type == CHECK_BLACK)
+                board[x][y] = BLACK;
+            else if(type == WHITE)
+                board[x][y] = CHECK_WHITE;
+            else if(type == CHECK_WHITE)
+                board[x][y] = WHITE;
+            else if(type == BLANK)
+                board[x][y] = CHECK_BLANK;
+        }
+
+        setDeadChess(x, y-1, type);
+        setDeadChess(x, y+1, type);
+        setDeadChess(x-1, y, type);
+        setDeadChess(x+1, y, type);
+    }
+
     /** 回到哪一手 */
     public void recovery(int turns){
         HistoryInfo info = historyList.get(turns-1);
@@ -269,14 +332,30 @@ public class CheckerBoard extends BaseDataView {
         }
     }
 
-    /** 點選死去的棋子 */
-    public void getDeadChess(){
+    /** 點選死子模式 */
+    public void setDeadChessMode(){
+        ggMode = true;
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    int x = Math.round(event.getX() / SPACE) - 1;
+                    int y = Math.round(event.getY() / SPACE) - 1;
+
+                    if (!(x < 0 || x > 18 || y < 0 || y > 18)) {
+                        setDeadChess(x, y, board[x][y]);
+                        invalidate();
+                    }
+                }
                 return true;
             }
         });
+    }
+
+    /** 回到正常模式 */
+    public void setNormalMode(){
+        ggMode = false;
+        setOnTouchListener(null);
     }
 
     /** 模擬落子的摳貝殼 */

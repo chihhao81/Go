@@ -148,8 +148,14 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
         tvBlackInfo.setText(activity.getString(R.string.get_dead_chess));
         llWhiteChoose.setVisibility(View.VISIBLE);
         llBlackChoose.setVisibility(View.VISIBLE);
+        btnWhiteConfirm.setVisibility(View.VISIBLE);
+        btnWhiteCancel.setVisibility(View.VISIBLE);
+        btnBlackConfirm.setVisibility(View.VISIBLE);
+        btnBlackCancel.setVisibility(View.VISIBLE);
         llWhiteMenu.setVisibility(View.GONE);
         llBlackMenu.setVisibility(View.GONE);
+
+        goView.setDeadChessMode();
 
         btnWhiteConfirm.setOnClickListener(onTemporaryListener);
         btnWhiteCancel.setOnClickListener(onTemporaryListener);
@@ -194,6 +200,7 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
                     btnBlackCancel.setOnClickListener(PKFragment.this);
                     llWhiteMenu.setVisibility(View.VISIBLE);
                     llBlackMenu.setVisibility(View.VISIBLE);
+                    goView.setNormalMode();
                     goView.resurrection();
                     goView.last(2); // 回復到虛手前
                     cancel();

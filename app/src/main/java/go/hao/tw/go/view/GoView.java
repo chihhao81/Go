@@ -91,6 +91,16 @@ public class GoView extends FrameLayout {
         simulateChess.setEnabled(true);
     }
 
+    /** 點選死子 */
+    public void setDeadChessMode(){
+        checkerBoard.setDeadChessMode();
+    }
+
+    /** 回到正常模式 */
+    public void setNormalMode(){
+        checkerBoard.setNormalMode();
+    }
+
     /** 每回合結束的監聽 */
     public void setOnTurnOverListener(CheckerBoard.OnTurnOverListener listener){
         checkerBoard.setOnTurnOverListener(listener);
