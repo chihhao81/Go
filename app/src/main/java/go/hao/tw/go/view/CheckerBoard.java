@@ -270,7 +270,7 @@ public class CheckerBoard extends BaseDataView {
 
         byte now = board[x][y];
 
-        if(isOpponent(now, type))
+        if(isOpponent(type, now))
             return;
         else if((type == BLACK && now == CHECK_BLACK) || (type == CHECK_BLACK && now == BLACK))
             return;
@@ -278,6 +278,8 @@ public class CheckerBoard extends BaseDataView {
             return;
         else if(now == CHECK_BLANK)
             return;
+        else if(now == BLANK)
+            board[x][y] = CHECK_BLANK;
 
         if(now == type){
             if(type == BLACK)
@@ -288,8 +290,6 @@ public class CheckerBoard extends BaseDataView {
                 board[x][y] = CHECK_WHITE;
             else if(type == CHECK_WHITE)
                 board[x][y] = WHITE;
-            else if(type == BLANK)
-                board[x][y] = CHECK_BLANK;
         }
 
         setDeadChess(x, y-1, type);
@@ -342,7 +342,7 @@ public class CheckerBoard extends BaseDataView {
                     int x = Math.round(event.getX() / SPACE) - 1;
                     int y = Math.round(event.getY() / SPACE) - 1;
 
-                    if (!(x < 0 || x > 18 || y < 0 || y > 18)) {
+                    if ((!(x < 0 || x > 18 || y < 0 || y > 18)) && board[x][y] != BLANK) {
                         setDeadChess(x, y, board[x][y]);
                         invalidate();
                     }
