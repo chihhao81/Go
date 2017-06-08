@@ -188,9 +188,8 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
                 case R.id.btnWhiteConfirm: // 白確認
                 case R.id.btnBlackConfirm: // 黑確認
                     v.setSelected(true);
-                    if(btnWhiteConfirm.isSelected() && btnBlackConfirm.isSelected()){
-                        Toast.makeText(activity, "結束", Toast.LENGTH_SHORT).show();
-                    }
+                    if(btnWhiteConfirm.isSelected() && btnBlackConfirm.isSelected())
+                        goView.judgement();
                     break;
                 case R.id.btnWhiteCancel: // 白取消
                 case R.id.btnBlackCancel: // 黑取消

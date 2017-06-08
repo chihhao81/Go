@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -33,6 +34,9 @@ public class CheckerBoard extends BaseDataView {
     private byte[][] board = new byte[19][19];
     private byte checkType; // 正在檢查什麼誰沒有氣
     private int eat; // 吃幾顆
+    private int bPlace = 0; // 黑目
+    private int wPlace = 0; // 白目
+    private int tempPlace = 0; // 暫時數的
     private boolean ggMode = false; // 是不是在點選死子模式
 
     public CheckerBoard(Context context, GoView goView) {
@@ -356,6 +360,41 @@ public class CheckerBoard extends BaseDataView {
     public void setNormalMode(){
         ggMode = false;
         setOnTouchListener(null);
+    }
+
+    /** 輸贏啦 */
+    public void judgement(){
+        // 被點掉的死子
+        for(int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == CHECK_BLACK) {
+                    wPlace++;
+                    board[i][j] = BLANK;
+                } else if(board[i][j] == CHECK_WHITE){
+                    bPlace++;
+                    board[i][j] = BLANK;
+                }
+            }
+        }
+
+        // 過程中的提子
+        for(int i = 1; i < goView.turns-2; i++){
+            int eat = historyList.get(i).eat;
+            if(i % 2 == BLACK)
+                wPlace += eat;
+            else
+                bPlace += eat;
+        }
+
+        for(int i = 0; i < board.length; i++)
+            for (int j = 0; j < board[i].length; j++)
+                if(board[i][j] == BLANK)
+                    checkPlace(i, j);
+    }
+
+    /** 數空, return true = 黑目 */
+    private boolean checkPlace(int x, int y){
+        return false;
     }
 
     /** 模擬落子的摳貝殼 */

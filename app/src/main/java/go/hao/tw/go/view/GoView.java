@@ -101,6 +101,11 @@ public class GoView extends FrameLayout {
         checkerBoard.setNormalMode();
     }
 
+    /** 輸贏啦 */
+    public void judgement(){
+        checkerBoard.judgement();
+    }
+
     /** 每回合結束的監聽 */
     public void setOnTurnOverListener(CheckerBoard.OnTurnOverListener listener){
         checkerBoard.setOnTurnOverListener(listener);
