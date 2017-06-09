@@ -2,7 +2,6 @@ package go.hao.tw.go.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -32,11 +31,10 @@ public class CheckerBoard extends BaseDataView {
     private HashMap<Integer, HistoryInfo> historyList = new HashMap<>(); // 歷史紀錄
 
     private byte[][] board = new byte[19][19];
-    private byte checkType; // 正在檢查什麼誰沒有氣
+    private byte checkType; // 暫時紀錄type用
     private int eat; // 吃幾顆
     private int bPlace = 0; // 黑目
     private int wPlace = 0; // 白目
-    private int tempPlace = 0; // 暫時數的
     private boolean ggMode = false; // 是不是在點選死子模式
 
     public CheckerBoard(Context context, GoView goView) {
@@ -302,6 +300,39 @@ public class CheckerBoard extends BaseDataView {
         setDeadChess(x+1, y, type);
     }
 
+    /** 數空, return true = 黑目 */
+    private int checkPlace(int x, int y){
+        if(outOfArray(x, y))
+            return 0;
+
+        byte now = board[x][y];
+        if(now != BLANK) // 不是目
+            return 0;
+
+        int place = 1;
+        board[x][y] = CHECK_BLANK;
+
+        if(notMyPlace(x, y-1) || notMyPlace(x, y+1) || notMyPlace(x-1, y) || notMyPlace(x+1, y))
+            return -666;
+
+        place += checkPlace(x, y-1) + checkPlace(x, y+1) + checkPlace(x-1, y) + checkPlace(x+1, y);
+        return place;
+    }
+
+    /***/
+    private boolean notMyPlace(int x, int y){
+        if(outOfArray(x, y))
+            return false;
+        byte now = board[x][y];
+        if(now == BLACK || now == WHITE) {
+            if (checkType == BLANK)
+                checkType = now;
+            else if(checkType != now)
+                return true;
+        }
+        return false;
+    }
+
     /** 回到哪一手 */
     public void recovery(int turns){
         HistoryInfo info = historyList.get(turns-1);
@@ -386,15 +417,22 @@ public class CheckerBoard extends BaseDataView {
                 bPlace += eat;
         }
 
-        for(int i = 0; i < board.length; i++)
-            for (int j = 0; j < board[i].length; j++)
-                if(board[i][j] == BLANK)
-                    checkPlace(i, j);
-    }
+        for(int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == BLANK) {
+                    checkType = BLANK;
+                    int place = checkPlace(i, j);
+                    if(place > 0) {
+                        if(checkType == BLACK)
+                            bPlace += place;
+                        else if(checkType == WHITE)
+                            wPlace += place;
+                    }
+                }
+            }
+        }
 
-    /** 數空, return true = 黑目 */
-    private boolean checkPlace(int x, int y){
-        return false;
+        Log.e("Hao", "black = "+bPlace+", white = "+wPlace);
     }
 
     /** 模擬落子的摳貝殼 */
