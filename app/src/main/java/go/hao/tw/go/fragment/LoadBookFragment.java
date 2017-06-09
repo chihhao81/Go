@@ -173,9 +173,8 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
                 Toast.makeText(activity, "懶得做啦", Toast.LENGTH_SHORT).show();;
                 break;
             case R.id.btnTry: // 試下
-//                goView.setTry();
-//                btnTry.setSelected(!btnTry.isSelected());
-                goView.judgement();
+                goView.setTry();
+                btnTry.setSelected(!btnTry.isSelected());
                 break;
         }
     }

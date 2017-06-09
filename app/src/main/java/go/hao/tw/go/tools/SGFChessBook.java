@@ -39,12 +39,12 @@ public class SGFChessBook extends ChessBook{
         int turns = 1;
         getGameContent(stringBuffer);
         while(stringBuffer.indexOf(";") >= 0){
-            if(turns == 127)
+            if(turns == 90)
                 System.out.println();
             String str = getInfoString(stringBuffer);
             String key = turns % 2 == 0 ? W : B;
             String position = getStringValue(str, key);
-            if(position.isEmpty() || (position.contains("(")) && position.contains(")"))
+            if(position.isEmpty() || (str.contains("(")) && str.contains(")"))
                 continue;
 
             ChessBookInfo info = new ChessBookInfo();
