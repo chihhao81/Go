@@ -2,6 +2,9 @@ package go.hao.tw.go.tools;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import go.hao.tw.go.App;
 import go.hao.tw.go.R;
 
@@ -30,6 +33,8 @@ public class SGFChessBook extends ChessBook{
     private final String C  = "]C["; // 註解
     private final int ASCII_LOW_A = 97; // ascii code a
 
+    private List<Integer> varyList = new ArrayList<>();
+
     public SGFChessBook(String str){
         Log.e("Hao", str);
         analysis(new StringBuffer(str));
@@ -39,22 +44,31 @@ public class SGFChessBook extends ChessBook{
         int turns = 1;
         getGameContent(stringBuffer);
         while(stringBuffer.indexOf(";") >= 0){
-            if(turns == 90)
-                System.out.println();
             String str = getInfoString(stringBuffer);
             String key = turns % 2 == 0 ? W : B;
             String position = getStringValue(str, key);
-            if(position.isEmpty() || (str.contains("(")) && str.contains(")"))
+            if(position.isEmpty()) { // 虛手?
+                turns++;
                 continue;
+            }
+
+            if(str.contains("(") && str.contains(")"))
+                continue;
+            else if(str.contains("("))
+                varyList.add(turns);
+            else if(str.contains(")")){
+                turns = varyList.remove(varyList.size()-1);
+                for(int i = turns; i < hashMap.size(); i++)
+                    hashMap.remove(i);
+                continue;
+            }
 
             ChessBookInfo info = new ChessBookInfo();
             info.turns = turns;
             info.x = position.charAt(0) - ASCII_LOW_A;
             info.y = position.charAt(1) - ASCII_LOW_A;
-            if(!getStringValue(str, C).isEmpty()){
-                int indexStart = str.indexOf(C) + C.length();
-                int indexEnd = str.lastIndexOf("]");
-                info.msg = str.substring(indexStart, indexEnd);
+            if(!getStringValue(str, C).isEmpty()) {
+                info.msg = str.substring(str.indexOf(C) + C.length()) + "\n";
             }
 
             hashMap.put(turns, info);
@@ -120,13 +134,13 @@ public class SGFChessBook extends ChessBook{
 
     /** 取得這次資訊 */
     private String getInfoString(StringBuffer stringBuffer) {
-        int index = stringBuffer.deleteCharAt(0).indexOf(";");
+        int index = stringBuffer.indexOf("\r\n");
         if (index >= 0) {
-            String s = ";"+stringBuffer.substring(0, index);
-            stringBuffer.delete(0, index);
+            String s = stringBuffer.substring(0, index);
+            stringBuffer.delete(0, index+1);
             return s;
         } else if(stringBuffer.length() > 0){
-            return ";"+stringBuffer.toString();
+            return stringBuffer.toString();
         } else {
             return "";
         }
