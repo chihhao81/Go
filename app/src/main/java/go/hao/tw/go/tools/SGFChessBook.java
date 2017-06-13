@@ -47,8 +47,9 @@ public class SGFChessBook extends ChessBook{
             String str = getInfoString(stringBuffer);
             String key = turns % 2 == 0 ? W : B;
             String position = getStringValue(str, key);
-            if(position.isEmpty()) { // 虛手?
-                turns++;
+            if(position.isEmpty()) {
+                if(str.contains(key))  // 虛手
+                    turns++;
                 continue;
             }
 
@@ -68,7 +69,7 @@ public class SGFChessBook extends ChessBook{
             info.x = position.charAt(0) - ASCII_LOW_A;
             info.y = position.charAt(1) - ASCII_LOW_A;
             if(!getStringValue(str, C).isEmpty()) {
-                info.msg = str.substring(str.indexOf(C) + C.length()) + "\n";
+                info.msg = str.substring(str.indexOf(C) + C.length());
             }
 
             hashMap.put(turns, info);
@@ -134,13 +135,45 @@ public class SGFChessBook extends ChessBook{
 
     /** 取得這次資訊 */
     private String getInfoString(StringBuffer stringBuffer) {
-        int index = stringBuffer.indexOf("\r\n");
-        if (index >= 0) {
-            String s = stringBuffer.substring(0, index);
-            stringBuffer.delete(0, index+1);
-            return s;
-        } else if(stringBuffer.length() > 0){
-            return stringBuffer.toString();
+        while(true){
+            char c = stringBuffer.charAt(0);
+            if(c == '(' || c == ';' || stringBuffer.length() == 0)
+                break;
+            else
+                stringBuffer.deleteCharAt(0);
+        }
+
+        for(int i = 2; i < stringBuffer.length()-1; i++){
+            char c = stringBuffer.charAt(i);
+            char ac = stringBuffer.charAt(i+1);
+
+            if(c == 'C' && ac == '[') {
+                int size = stringBuffer.length();
+                for(int j = i; j < size; j++) {
+                    c = stringBuffer.charAt(j);
+                    if (c == ']') {
+                        if(stringBuffer.charAt(j-1) != '\\') {
+                            String result = stringBuffer.substring(0, j);
+                            stringBuffer.delete(0, j+1);
+                            return result;
+                        } else {
+                            stringBuffer.deleteCharAt(j-1);
+                            j--;
+                            size--;
+                        }
+                    }
+                }
+            } else if(c == '\n' && (ac == '(' || ac == ';') || (ac == '\n' && i == stringBuffer.length()-1)){
+                String result = stringBuffer.substring(0, i);
+                stringBuffer.delete(0, i+1);
+                return result;
+            }
+        }
+
+        if(stringBuffer.length() > 0) {
+            String result = stringBuffer.toString();
+            stringBuffer.delete(0, stringBuffer.length()-1);
+            return result;
         } else {
             return "";
         }
