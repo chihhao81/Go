@@ -137,31 +137,31 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
                 if(isTrying())
                     return;
                 goView.last(goView.turns);
-                tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns));
+                tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns-1));
                 break;
             case R.id.btnLastFive: // 前五手
                 if(isTrying())
                     return;
                 goView.last(5);
-                tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns));
+                tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns-1));
                 break;
             case R.id.btnLast: // 前一手
                 if(isTrying())
                     return;
                 goView.last(1);
-                tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns));
+                tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns-1));
                 break;
             case R.id.btnNext: // 下一手
                 if(isTrying())
                     return;
                 goView.next(1);
-                tvInfo.setText(chessBook.getMsg(goView.turns));
+                tvInfo.setText(chessBook.getMsg(goView.turns-1));
                 break;
             case R.id.btnNextFive: // 下五手
                 if(isTrying())
                     return;
                 goView.next(5);
-                tvInfo.setText(chessBook.getMsg(goView.turns));
+                tvInfo.setText(chessBook.getMsg(goView.turns-1));
                 break;
             case R.id.btnEnd: // 最後一手
                 if(isTrying())
