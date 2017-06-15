@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import go.hao.tw.go.App;
 import go.hao.tw.go.R;
+import go.hao.tw.go.pop.PKSettingDialog;
 import go.hao.tw.go.view.BaseDataView;
 import go.hao.tw.go.view.CheckerBoard;
 import go.hao.tw.go.view.GoView;
@@ -30,6 +31,8 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
     private TextView tvWhiteInfo, tvBlackInfo;
     private Button btnWhiteRegret, btnWhiteSurrender, btnWhitePass, btnWhiteConfirm, btnWhiteCancel;
     private Button btnBlackRegret, btnBlackSurrender, btnBlackPass, btnBlackConfirm, btnBlackCancel;
+
+    private PKSettingDialog pkSettingDialog;
 
     private int passTurns; // 檢查是不是連續虛手結束比賽
 
@@ -65,12 +68,15 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
         btnBlackConfirm = (Button)findViewById(R.id.btnBlackConfirm);
         btnBlackCancel = (Button)findViewById(R.id.btnBlackCancel);
 
+        pkSettingDialog = new PKSettingDialog(activity);
+        pkSettingDialog.show();
+
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(App.screenWidth, App.screenWidth);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         goView.setLayoutParams(params);
 
         int space = (int)BaseDataView.SPACE;
-        int height = (App.screenHeight - App.screenWidth) / 2 - space;
+        int height = (App.screenHeight - App.screenWidth) / 2 - space*2;
         params = new RelativeLayout.LayoutParams(height, height);
         params.addRule(RelativeLayout.ABOVE, R.id.goView);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);

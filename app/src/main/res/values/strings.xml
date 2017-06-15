@@ -32,4 +32,8 @@
     <!-- SelectFileAdapter -->
     <string name="file_name">檔案名稱</string>
     <string name="select_sgf">請選擇sgf檔</string>
+
+    <!-- PKSettingDialog -->
+    <string name="default_bp">黑黑</string>
+    <string name="default_wp">白白</string>
 </resources>

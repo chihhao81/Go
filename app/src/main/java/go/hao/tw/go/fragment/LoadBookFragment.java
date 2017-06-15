@@ -83,22 +83,6 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
         btnTry.setOnClickListener(this);
     }
 
-    /** 取得sgf擋 */
-    private SGFChessBook getSgf(String path){
-        SGFChessBook chessBook = null;
-        try {
-            InputStream inputStream = activity.getAssets().open(path);
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-            chessBook = new SGFChessBook(new String(buffer, "UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return chessBook;
-    }
-
     /** 是不是正在試下 */
     private boolean isTrying(){
         if(!btnTry.isSelected())

@@ -107,15 +107,16 @@ public class SGFChessBook extends ChessBook{
         StringBuffer result = new StringBuffer();
 
         // 黑棋資訊
-        result.append(App.context.getString(R.string.info_pb)).append(getStringValue(str, PB))
-                .append(String.format("(%s)\n", getStringValue(str, BR)));
+        bPlayer = getStringValue(str, PB);
+        result.append(App.context.getString(R.string.info_pb)).append(bPlayer).append(String.format("(%s)\n", getStringValue(str, BR)));
         // 白棋資訊
-        result.append(App.context.getString(R.string.info_pw)).append(getStringValue(str, PW))
-                .append(String.format("(%s)\n", getStringValue(str, WR)));
+        wPlayer = getStringValue(str, PW);
+        result.append(App.context.getString(R.string.info_pw)).append(wPlayer).append(String.format("(%s)\n", getStringValue(str, WR)));
         // 比賽時間
         result.append(time).append("\n");
         // 貼目
-        result.append(App.context.getString(R.string.info_km)).append(Float.parseFloat(getStringValue(str, KM))).append("\n");
+        km = Float.parseFloat(getStringValue(str, KM));
+        result.append(App.context.getString(R.string.info_km)).append(km).append("\n");
         // 比賽結果
         result.append(App.context.getString(R.string.info_re)).append(getStringValue(str, RE));
         // 註解

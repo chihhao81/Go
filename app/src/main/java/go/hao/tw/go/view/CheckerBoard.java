@@ -33,8 +33,8 @@ public class CheckerBoard extends BaseDataView {
     private byte[][] board = new byte[19][19];
     private byte checkType; // 暫時紀錄type用
     private int eat; // 吃幾顆
-    private int bPlace = 0; // 黑目
-    private int wPlace = 0; // 白目
+    private float bPlace = 0; // 黑目
+    private float wPlace = 0; // 白目
     private boolean ggMode = false; // 是不是在點選死子模式
 
     public CheckerBoard(Context context, GoView goView) {
@@ -431,8 +431,8 @@ public class CheckerBoard extends BaseDataView {
                 }
             }
         }
+        wPlace += goView.getKm();
 
-        Log.e("Hao", "black = "+bPlace+", white = "+wPlace);
     }
 
     /** 模擬落子的摳貝殼 */

@@ -11,7 +11,7 @@
         android:layout_above="@+id/goView"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="20dp"
-        android:src="@drawable/temp_white" />
+        android:src="@drawable/whitebox" />
 
     <LinearLayout
         android:id="@+id/llWhiteMenu"
@@ -100,7 +100,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/goView"
         android:layout_marginRight="20dp"
-        android:src="@drawable/temp_black" />
+        android:src="@drawable/blackbox" />
 
     <LinearLayout
         android:id="@+id/llBlackMenu"

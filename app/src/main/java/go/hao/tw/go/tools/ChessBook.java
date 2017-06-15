@@ -9,9 +9,22 @@ import java.util.HashMap;
 public class ChessBook {
 
     protected HashMap<Integer, ChessBookInfo> hashMap = new HashMap<>();
+    protected String bPlayer, wPlayer;
+    protected float km = 0; // 貼目
     protected int maxTurns;
 
-    /** 取得結束手數 */
+    public String getbPlayer(){
+        return bPlayer;
+    }
+
+    public String getwPlayer(){
+        return wPlayer;
+    }
+
+    public float getKm(){
+        return km;
+    }
+
     public int getMaxTurns(){
         return maxTurns;
     }
