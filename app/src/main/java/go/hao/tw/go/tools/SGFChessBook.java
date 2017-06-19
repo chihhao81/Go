@@ -57,7 +57,7 @@ public class SGFChessBook extends ChessBook{
                 continue;
             else if(str.contains("("))
                 varyList.add(turns);
-            else if(str.contains(")")){
+            else if(str.contains(")") && varyList.size() > 0){
                 turns = varyList.remove(varyList.size()-1);
                 for(int i = turns; i < hashMap.size(); i++)
                     hashMap.remove(i);

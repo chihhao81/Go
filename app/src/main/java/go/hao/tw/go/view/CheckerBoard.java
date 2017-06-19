@@ -9,6 +9,9 @@ import android.view.View;
 
 import java.util.HashMap;
 
+import go.hao.tw.go.R;
+import go.hao.tw.go.tools.ToolsBox;
+
 /**
  * Created by Hao on 2017/5/20.
  */
@@ -33,8 +36,8 @@ public class CheckerBoard extends BaseDataView {
     private byte[][] board = new byte[19][19];
     private byte checkType; // 暫時紀錄type用
     private int eat; // 吃幾顆
-    private float bPlace = 0; // 黑目
-    private float wPlace = 0; // 白目
+    private int bPlace = 0; // 黑目
+    private int wPlace = 0; // 白目
     private boolean ggMode = false; // 是不是在點選死子模式
 
     public CheckerBoard(Context context, GoView goView) {
@@ -300,7 +303,7 @@ public class CheckerBoard extends BaseDataView {
         setDeadChess(x+1, y, type);
     }
 
-    /** 數空, return true = 黑目 */
+    /** 數空 */
     private int checkPlace(int x, int y){
         if(outOfArray(x, y))
             return 0;
@@ -319,7 +322,7 @@ public class CheckerBoard extends BaseDataView {
         return place;
     }
 
-    /***/
+    /** 是不是我的地 */
     private boolean notMyPlace(int x, int y){
         if(outOfArray(x, y))
             return false;
@@ -393,8 +396,12 @@ public class CheckerBoard extends BaseDataView {
         setOnTouchListener(null);
     }
 
+    public HashMap<Integer, HistoryInfo> getHistoryList(){
+        return historyList;
+    }
+
     /** 輸贏啦 */
-    public void judgement(){
+    public int[] judgement(){
         // 被點掉的死子
         for(int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -431,8 +438,7 @@ public class CheckerBoard extends BaseDataView {
                 }
             }
         }
-        wPlace += goView.getKm();
-
+        return new int[]{bPlace, wPlace};
     }
 
     /** 模擬落子的摳貝殼 */
@@ -464,9 +470,10 @@ public class CheckerBoard extends BaseDataView {
     }
 
     /** 歷史紀錄 */
-    private class HistoryInfo{
+    public class HistoryInfo{
+        public int x, y;
         byte[][] board;
-        int x, y, eat;
+        int eat;
 
         HistoryInfo build(){
             x = nowX;

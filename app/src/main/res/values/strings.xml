@@ -23,6 +23,11 @@
     <string name="pass">棄權一手</string>
     <string name="not_ur_turn">不是你的回合</string>
     <string name="get_dead_chess">點選死子</string>
+    <string name="pk_for_place">%1$s%2$d目</string>
+    <string name="win_for_place">%1$s勝：%2$.1f目</string>
+    <string name="win_for_surrend">%s中盤勝</string>
+    <string name="review_game">覆盤</string>
+    <string name="save_game">儲存棋譜</string>
 
     <!-- LoadBookFragment -->
     <string name="show_number">手數</string>

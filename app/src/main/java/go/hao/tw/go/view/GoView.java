@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import java.util.HashMap;
+
 import go.hao.tw.go.tools.SGFChessBook;
 
 /**
@@ -21,7 +23,6 @@ public class GoView extends FrameLayout {
 
     public int turns = 1; // 手數
     private int tryTurns; // 紀錄按下試下時的手數(打譜)
-    private float km = 0; // 貼目
 
     public GoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -42,16 +43,6 @@ public class GoView extends FrameLayout {
     public void setChessBook(SGFChessBook chessBook){
         this.chessBook = chessBook;
         simulateChess.setEnabled(false);
-    }
-
-    /** 設定貼目 */
-    public void setKm(float km){
-        this.km = km;
-    }
-
-    /** 取得貼目 */
-    public float getKm(){
-        return chessBook == null ? 0 : chessBook.getKm();
     }
 
     /** 黑棋的局? */
@@ -113,8 +104,13 @@ public class GoView extends FrameLayout {
     }
 
     /** 輸贏啦 */
-    public void judgement(){
-        checkerBoard.judgement();
+    public int[] judgement(){
+        return checkerBoard.judgement();
+    }
+
+    /** 取得棋譜 */
+    public HashMap<Integer, CheckerBoard.HistoryInfo> getHistoryList(){
+        return checkerBoard.getHistoryList();
     }
 
     /** 每回合結束的監聽 */

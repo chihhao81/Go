@@ -1,7 +1,11 @@
 package go.hao.tw.go.fragment;
 
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +18,14 @@ import android.widget.Toast;
 
 import go.hao.tw.go.App;
 import go.hao.tw.go.R;
+import go.hao.tw.go.activity.MainActivity;
 import go.hao.tw.go.pop.PKSettingDialog;
+import go.hao.tw.go.tools.ToolsBox;
 import go.hao.tw.go.view.BaseDataView;
 import go.hao.tw.go.view.CheckerBoard;
 import go.hao.tw.go.view.GoView;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 /**
  * Created by chihhao on 2017/5/26.
@@ -25,16 +33,18 @@ import go.hao.tw.go.view.GoView;
 
 public class PKFragment extends BaseFragment implements View.OnClickListener {
 
-    private LinearLayout llWhiteMenu, llWhiteChoose, llBlackMenu, llBlackChoose;
+    private LinearLayout llWhiteMenu, llWhiteChoose, llBlackMenu, llBlackChoose, llPKResult;
     private GoView goView;
     private ImageView ivWhite, ivBlack;
-    private TextView tvWhiteInfo, tvBlackInfo;
+    private TextView tvWhiteInfo, tvBlackInfo, tvResult;
     private Button btnWhiteRegret, btnWhiteSurrender, btnWhitePass, btnWhiteConfirm, btnWhiteCancel;
     private Button btnBlackRegret, btnBlackSurrender, btnBlackPass, btnBlackConfirm, btnBlackCancel;
+    private Button btnReviewGame, btnSaveGame;
 
     private PKSettingDialog pkSettingDialog;
 
     private int passTurns; // 檢查是不是連續虛手結束比賽
+    private String sgfText;// 儲存棋譜用
 
     @Nullable
     @Override
@@ -52,11 +62,13 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
         llWhiteChoose = (LinearLayout)findViewById(R.id.llWhiteChoose);
         llBlackMenu = (LinearLayout)findViewById(R.id.llBlackMenu);
         llBlackChoose = (LinearLayout)findViewById(R.id.llBlackChoose);
+        llPKResult = (LinearLayout)findViewById(R.id.llPKResult);
         goView = (GoView)findViewById(R.id.goView);
         ivWhite = (ImageView)findViewById(R.id.ivWhite);
         ivBlack = (ImageView)findViewById(R.id.ivBlack);
         tvWhiteInfo = (TextView)findViewById(R.id.tvWhiteInfo);
         tvBlackInfo = (TextView)findViewById(R.id.tvBlackInfo);
+        tvResult = (TextView)findViewById(R.id.tvResult);
         btnWhiteRegret = (Button)findViewById(R.id.btnWhiteRegret);
         btnWhiteSurrender = (Button)findViewById(R.id.btnWhiteSurrender);
         btnWhitePass = (Button)findViewById(R.id.btnWhitePass);
@@ -67,6 +79,8 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
         btnBlackPass = (Button)findViewById(R.id.btnBlackPass);
         btnBlackConfirm = (Button)findViewById(R.id.btnBlackConfirm);
         btnBlackCancel = (Button)findViewById(R.id.btnBlackCancel);
+        btnReviewGame = (Button)findViewById(R.id.btnReviewGame);
+        btnSaveGame = (Button)findViewById(R.id.btnSaveGame);
 
         pkSettingDialog = new PKSettingDialog(activity);
         pkSettingDialog.show();
@@ -100,6 +114,8 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
         btnBlackPass.setOnClickListener(this);
         btnBlackConfirm.setOnClickListener(this);
         btnBlackCancel.setOnClickListener(this);
+        btnReviewGame.setOnClickListener(this);
+        btnSaveGame.setOnClickListener(this);
     }
 
     /** 白色同意 */
@@ -110,7 +126,7 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
             goView.gameOver();
             llWhiteMenu.setVisibility(View.GONE);
             llBlackMenu.setVisibility(View.GONE);
-            Toast.makeText(activity, "黑勝", Toast.LENGTH_SHORT).show();
+            setPKResult(String.format(activity.getString(R.string.win_for_surrend), pkSettingDialog.getBlackPlayer()), "B+Resign");
         }
         cancel();
     }
@@ -123,9 +139,23 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
             goView.gameOver();
             llWhiteMenu.setVisibility(View.GONE);
             llBlackMenu.setVisibility(View.GONE);
-            Toast.makeText(activity, "白勝", Toast.LENGTH_SHORT).show();
+            setPKResult(String.format(activity.getString(R.string.win_for_surrend), pkSettingDialog.getWhitePlayer()), "W+Resign");
         }
         cancel();
+    }
+
+    /** 結束統計畫面 */
+    private void setPKResult(String content, String result){
+        llPKResult.setVisibility(View.VISIBLE);
+        llWhiteChoose.setVisibility(View.GONE);
+        llBlackChoose.setVisibility(View.GONE);
+        tvResult.setText(content);
+        String sgfStart = "(;GM[1]FF[4]CA[UTF-8]RU[Japanese]SZ[19]KM["
+                + pkSettingDialog.getKm() + "]PW["
+                + pkSettingDialog.getWhitePlayer() + "]PB["
+                + pkSettingDialog.getBlackPlayer() + "]RE["
+                + result + "]\n";
+        sgfText = ToolsBox.toSGF(sgfStart, goView.getHistoryList());
     }
 
     /** 取消 */
@@ -194,8 +224,18 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
                 case R.id.btnWhiteConfirm: // 白確認
                 case R.id.btnBlackConfirm: // 黑確認
                     v.setSelected(true);
-                    if(btnWhiteConfirm.isSelected() && btnBlackConfirm.isSelected())
-                        goView.judgement();
+                    if(btnWhiteConfirm.isSelected() && btnBlackConfirm.isSelected()) {
+                        int[] resultPlace = goView.judgement();
+                        boolean bWin = resultPlace[0] > resultPlace[1];
+                        String winner = bWin ? pkSettingDialog.getBlackPlayer() : pkSettingDialog.getWhitePlayer();
+                        float winPlace = Math.abs(resultPlace[0] - (resultPlace[1] + pkSettingDialog.getKm()));
+                        String result = String.format(activity.getString(R.string.pk_for_place), activity.getString(R.string.info_pb), resultPlace[0]) + "\n"
+                                + String.format(activity.getString(R.string.pk_for_place), activity.getString(R.string.info_pw), resultPlace[1]) + "\n"
+                                + String.format(activity.getString(R.string.win_for_place)
+                                        , winner, winPlace);
+                        winner = bWin ? "B+" : "W+";
+                        setPKResult(result, winner+winPlace);
+                    }
                     break;
                 case R.id.btnWhiteCancel: // 白取消
                 case R.id.btnBlackCancel: // 黑取消
@@ -273,6 +313,15 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
                     btnBlackConfirm.setVisibility(View.GONE);
                     btnBlackCancel.setVisibility(View.GONE);
                 }
+                break;
+            case R.id.btnReviewGame: // 覆盤
+                ((MainActivity)activity).goReview(sgfText);
+                break;
+            case R.id.btnSaveGame: // 儲存棋譜
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(activity, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    ((MainActivity)activity).checkPermission(new String[]{READ_EXTERNAL_STORAGE}, MainActivity.REQUEST_CODE_PKFRAGMENT);
+                else
+                    ;
                 break;
         }
     }

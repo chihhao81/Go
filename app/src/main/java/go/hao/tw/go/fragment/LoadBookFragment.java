@@ -40,7 +40,13 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
     private SGFChessBook chessBook;
     private SelectFileAdapter adapter;
 
-    public LoadBookFragment(){}
+    public static LoadBookFragment newInstance(String sgf){
+        LoadBookFragment fragment = new LoadBookFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("sgf", sgf);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -67,11 +73,20 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
         tvInfo = (TextView)findViewById(R.id.tvInfo);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
 
-        adapter = new SelectFileAdapter(activity);
-        adapter.setOnSGFSelectedListener(onSGFSelectedListener);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.addItemDecoration(new SpacesItemDecoration(0, 1, 0, 1));
-        recyclerView.setAdapter(adapter);
+        String sgf = getArguments().getString("sgf");
+        if(sgf == null) {
+            adapter = new SelectFileAdapter(activity);
+            adapter.setOnSGFSelectedListener(onSGFSelectedListener);
+            recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+            recyclerView.addItemDecoration(new SpacesItemDecoration(0, 1, 0, 1));
+            recyclerView.setAdapter(adapter);
+        } else {
+            llSelectFile.setVisibility(View.GONE);
+            chessBook = new SGFChessBook(sgf);
+            goView.setLayoutParams(new LinearLayout.LayoutParams(App.screenWidth, App.screenWidth));
+            goView.setChessBook(chessBook);
+            tvInfo.setText(chessBook.getChessBookInfo(0).msg);
+        }
 
         btnInit.setOnClickListener(this);
         btnLastFive.setOnClickListener(this);
@@ -154,7 +169,7 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
                 tvInfo.setText(chessBook.getMsg(chessBook.getMaxTurns()));
                 break;
             case R.id.btnShowNumber: // 顯示手數
-                Toast.makeText(activity, "懶得做啦", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(activity, "懶得做啦", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnTry: // 試下
                 goView.setTry();
