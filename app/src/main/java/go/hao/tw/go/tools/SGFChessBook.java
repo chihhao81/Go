@@ -99,6 +99,8 @@ public class SGFChessBook extends ChessBook{
         time2 = getStringValue(str, OT);
         if(time2.contains(" "))
             time2 = time2.substring(0, time2.indexOf(" "));
+        if(time1.isEmpty() && time2.isEmpty())
+            return App.context.getString(R.string.info_game_time);
         return App.context.getString(R.string.info_game_time) + time1 + "+" + time2;
     }
 
@@ -108,17 +110,27 @@ public class SGFChessBook extends ChessBook{
 
         // 黑棋資訊
         bPlayer = getStringValue(str, PB);
-        result.append(App.context.getString(R.string.info_pb)).append(bPlayer).append(String.format("(%s)\n", getStringValue(str, BR)));
+        result.append(App.context.getString(R.string.info_pb)).append(bPlayer);
+        if(!getStringValue(str, BR).isEmpty())
+            result.append(String.format("(%s)\n", getStringValue(str, BR)));
+        else
+            result.append("\n");
         // 白棋資訊
         wPlayer = getStringValue(str, PW);
-        result.append(App.context.getString(R.string.info_pw)).append(wPlayer).append(String.format("(%s)\n", getStringValue(str, WR)));
+        result.append(App.context.getString(R.string.info_pw)).append(wPlayer);
+        if(!getStringValue(str, WR).isEmpty())
+            result.append(String.format("(%s)\n", getStringValue(str, BR)));
+        else
+            result.append("\n");
         // 比賽時間
-        result.append(time).append("\n");
+        if(!time.isEmpty())
+            result.append(time).append("\n");
         // 貼目
         km = Float.parseFloat(getStringValue(str, KM));
         result.append(App.context.getString(R.string.info_km)).append(km).append("\n");
         // 比賽結果
-        result.append(App.context.getString(R.string.info_re)).append(getStringValue(str, RE));
+        if(!getStringValue(str, RE).isEmpty())
+            result.append(App.context.getString(R.string.info_re)).append(getStringValue(str, RE));
         // 註解
         if(!getStringValue(str, C).isEmpty()) {
             int indexStart = str.indexOf(C) + C.length();

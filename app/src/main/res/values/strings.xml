@@ -28,6 +28,7 @@
     <string name="win_for_surrend">%s中盤勝</string>
     <string name="review_game">覆盤</string>
     <string name="save_game">儲存棋譜</string>
+    <string name="select_path">請選擇存放位置</string>
 
     <!-- LoadBookFragment -->
     <string name="show_number">手數</string>

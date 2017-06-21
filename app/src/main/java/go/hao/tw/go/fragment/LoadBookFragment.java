@@ -73,14 +73,14 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
         tvInfo = (TextView)findViewById(R.id.tvInfo);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
 
-        String sgf = getArguments().getString("sgf");
-        if(sgf == null) {
+        if(getArguments() == null) {
             adapter = new SelectFileAdapter(activity);
             adapter.setOnSGFSelectedListener(onSGFSelectedListener);
             recyclerView.setLayoutManager(new LinearLayoutManager(activity));
             recyclerView.addItemDecoration(new SpacesItemDecoration(0, 1, 0, 1));
             recyclerView.setAdapter(adapter);
         } else {
+            String sgf = getArguments().getString("sgf");
             llSelectFile.setVisibility(View.GONE);
             chessBook = new SGFChessBook(sgf);
             goView.setLayoutParams(new LinearLayout.LayoutParams(App.screenWidth, App.screenWidth));

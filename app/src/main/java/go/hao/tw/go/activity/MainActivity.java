@@ -77,9 +77,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (permission.equals(READ_EXTERNAL_STORAGE) && requestCode == REQUEST_CODE_LOADFRAGMENT) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
                     fragmentManager.beginTransaction().replace(R.id.flContains, new LoadBookFragment()).addToBackStack("").commitAllowingStateLoss();
-
                 else
                     flContains.setVisibility(View.GONE);
+            } else if(permission.equals(READ_EXTERNAL_STORAGE) && requestCode == REQUEST_CODE_PKFRAGMENT) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    for(Fragment fragment : fragmentManager.getFragments()) {
+                        if (fragment != null && fragment instanceof PKFragment) {
+                            ((PKFragment) fragment).showSelectPath();
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
@@ -87,9 +95,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         if(fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
-            if(fragmentManager.getBackStackEntryCount() == 1)
-                flContains.setVisibility(View.GONE);
+            for(Fragment fragment : fragmentManager.getFragments()) {
+                if (fragment != null) {
+                    boolean back = ((BaseFragment) fragment).onBackPressed();
+                    if(back){
+                        fragmentManager.popBackStack();
+                        if(fragmentManager.getBackStackEntryCount() == 1)
+                            flContains.setVisibility(View.GONE);
+                    }
+                    break;
+                }
+            }
         } else {
             super.onBackPressed();
         }

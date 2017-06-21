@@ -13,6 +13,7 @@
     <color name="yellow2">#ffff00</color>
     <color name="blue1">#0066FF</color>
     <color name="blue2">#74c1cd</color>
+    <color name="blue3">#52afab</color>
 
     <color name="recycler_back">#efe7c9</color>
 </resources>
