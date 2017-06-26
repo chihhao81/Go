@@ -67,8 +67,9 @@ public class SelectPathAdapter extends RecyclerView.Adapter<SelectPathAdapter.Vi
     }
 
     public String getPath(){
+        String temp = path;
         path = START_PATH;
-        return path;
+        return temp;
     }
 
     @Override
