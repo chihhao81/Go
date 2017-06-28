@@ -22,11 +22,14 @@ public class ToolsBox {
             CheckerBoard.HistoryInfo info = historyInfoList.get(i);
             if(info == null)
                 break;
-            if(info.x == -1 || info.y == -1)
+
+            char who = i%2 == 1 ? 'B' : 'W';
+            if(info.x == -1 || info.y == -1) {
+                stringBuilder.append(";").append(who).append("[]\n");
                 continue;
+            }
             char x = ary[info.x];
             char y = ary[info.y];
-            char who = i%2 == 1 ? 'B' : 'W';
             stringBuilder.append(";").append(who).append("[").append(x).append(y).append("]\n");
         }
         stringBuilder.append(")");

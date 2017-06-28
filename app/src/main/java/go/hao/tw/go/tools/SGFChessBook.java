@@ -48,8 +48,17 @@ public class SGFChessBook extends ChessBook{
             String key = turns % 2 == 0 ? W : B;
             String position = getStringValue(str, key);
             if(position.isEmpty()) {
-                if(str.contains(key))  // 虛手
+                if(str.contains(key)) {  // 虛手
+                    ChessBookInfo info = new ChessBookInfo();
+                    info.turns = turns;
+                    info.x = -1;
+                    info.y = -1;
+                    if(!getStringValue(str, C).isEmpty())
+                        info.msg = str.substring(str.indexOf(C) + C.length());
+
+                    hashMap.put(turns, info);
                     turns++;
+                }
                 continue;
             }
 
@@ -68,9 +77,8 @@ public class SGFChessBook extends ChessBook{
             info.turns = turns;
             info.x = position.charAt(0) - ASCII_LOW_A;
             info.y = position.charAt(1) - ASCII_LOW_A;
-            if(!getStringValue(str, C).isEmpty()) {
+            if(!getStringValue(str, C).isEmpty())
                 info.msg = str.substring(str.indexOf(C) + C.length());
-            }
 
             hashMap.put(turns, info);
             turns++;

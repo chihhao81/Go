@@ -251,7 +251,7 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
                     v.setSelected(true);
                     if(btnWhiteConfirm.isSelected() && btnBlackConfirm.isSelected()) {
                         int[] resultPlace = goView.judgement();
-                        boolean bWin = resultPlace[0] > resultPlace[1];
+                        boolean bWin = resultPlace[0] > (resultPlace[1] + pkSettingDialog.getKm());
                         String winner = bWin ? pkSettingDialog.getBlackPlayer() : pkSettingDialog.getWhitePlayer();
                         float winPlace = Math.abs(resultPlace[0] - (resultPlace[1] + pkSettingDialog.getKm()));
                         String result = String.format(activity.getString(R.string.pk_for_place), activity.getString(R.string.info_pb), resultPlace[0]) + "\n"

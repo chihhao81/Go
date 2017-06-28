@@ -3,14 +3,10 @@ package go.hao.tw.go.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.HashMap;
-
-import go.hao.tw.go.R;
-import go.hao.tw.go.tools.ToolsBox;
 
 /**
  * Created by Hao on 2017/5/20.
@@ -312,18 +308,22 @@ public class CheckerBoard extends BaseDataView {
         if(now != BLANK) // 不是目
             return 0;
 
+        if(whosPlace(x, y-1) || whosPlace(x, y+1) || whosPlace(x-1, y) || whosPlace(x+1, y)) {
+            board[x][y] = CHECK_BLANK;
+            return -666;
+        } else if(checkType == BLANK) {
+            return -666;
+        }
+
         int place = 1;
         board[x][y] = CHECK_BLANK;
-
-        if(notMyPlace(x, y-1) || notMyPlace(x, y+1) || notMyPlace(x-1, y) || notMyPlace(x+1, y))
-            return -666;
 
         place += checkPlace(x, y-1) + checkPlace(x, y+1) + checkPlace(x-1, y) + checkPlace(x+1, y);
         return place;
     }
 
     /** 是不是我的地 */
-    private boolean notMyPlace(int x, int y){
+    private boolean whosPlace(int x, int y){
         if(outOfArray(x, y))
             return false;
         byte now = board[x][y];
@@ -367,6 +367,9 @@ public class CheckerBoard extends BaseDataView {
             setNowXY(x, y);
             goView.turns++;
             drawChess(null);
+        } else if(x == -1 && y == -1) { // 虛手
+            setNowXY(-1, -1);
+            goView.turns++;
         }
     }
 
