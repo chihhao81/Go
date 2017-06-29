@@ -14,6 +14,8 @@ import go.hao.tw.go.R;
 
 public class SGFChessBook extends ChessBook{
 
+    public static final int ASCII_LOW_A = 97; // ascii code a
+
     private final String RU = "RU["; // 規則制度
     private final String SZ = "SZ["; // 棋盤規格
     private final String KM = "KM["; // 貼目
@@ -26,12 +28,12 @@ public class SGFChessBook extends ChessBook{
     private final String DT = "DT["; // 日期
     private final String PC = "PC["; // 比賽地點
     private final String RE = "RE["; // 結果
+    private final String AB = "AB["; // 讓子
     private final String B  = ";B["; // 黑棋
     private final String W  = ";W["; // 白棋
     private final String BL = "BL["; // 黑棋剩餘時間
     private final String WL = "WL["; // 白棋剩餘時間
     private final String C  = "]C["; // 註解
-    private final int ASCII_LOW_A = 97; // ascii code a
 
     private List<Integer> varyList = new ArrayList<>();
 
@@ -45,7 +47,7 @@ public class SGFChessBook extends ChessBook{
         getGameContent(stringBuffer);
         while(stringBuffer.indexOf(";") >= 0){
             String str = getInfoString(stringBuffer);
-            String key = turns % 2 == 0 ? W : B;
+            String key = str.contains(B) ? B : W;
             String position = getStringValue(str, key);
             if(position.isEmpty()) {
                 if(str.contains(key)) {  // 虛手
@@ -91,6 +93,15 @@ public class SGFChessBook extends ChessBook{
         stringBuffer.delete(0, stringBuffer.indexOf(";")+1);
         String str = stringBuffer.substring(0, stringBuffer.indexOf(";"));
         stringBuffer.delete(0, stringBuffer.indexOf(";"));
+
+        if(str.contains(AB)){
+            int index = str.indexOf(AB) + 2;
+            while (str.charAt(index) == '['){
+                abList.add(str.substring(index+1, index+3));
+                index += 4;
+            }
+        }
+
         ChessBookInfo info = new ChessBookInfo();
         info.x = -1;
         info.y = -1;

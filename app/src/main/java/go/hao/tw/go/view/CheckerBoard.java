@@ -373,6 +373,11 @@ public class CheckerBoard extends BaseDataView {
         }
     }
 
+    /** 讓子 */
+    public void setAbPosition(int x, int y){
+        board[x][y] = BLACK;
+    }
+
     /** 點選死子模式 */
     public void setDeadChessMode(){
         ggMode = true;

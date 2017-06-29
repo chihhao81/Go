@@ -20,7 +20,7 @@ import go.hao.tw.go.R;
 public class PKSettingDialog extends Dialog {
 
     private View layout;
-    private EditText etBlackPlayer, etWhitePlayer, etKm, etComity;
+    private EditText etBlackPlayer, etWhitePlayer, etKm, etAb;
     private Button btnConfirm;
 
     public PKSettingDialog(@NonNull Context context) {
@@ -31,7 +31,7 @@ public class PKSettingDialog extends Dialog {
         etBlackPlayer = (EditText)layout.findViewById(R.id.etBlackPlayer);
         etWhitePlayer = (EditText)layout.findViewById(R.id.etWhitePlayer);
         etKm = (EditText)layout.findViewById(R.id.etKm);
-        etComity = (EditText)layout.findViewById(R.id.etComity);
+        etAb = (EditText)layout.findViewById(R.id.etAb);
         btnConfirm = (Button)layout.findViewById(R.id.btnConfirm);
 
         btnConfirm.setLayoutParams(new LinearLayout.LayoutParams(App.screenWidth*8/10, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -57,7 +57,7 @@ public class PKSettingDialog extends Dialog {
         return Float.parseFloat(etKm.getText().length() == 0 ? etKm.getHint().toString() : etKm.getText().toString());
     }
 
-    public int getComity(){
-        return Integer.parseInt(etComity.getText().length() == 0 ? etComity.getHint().toString() : etComity.getText().toString());
+    public int getAb(){
+        return Integer.parseInt(etAb.getText().length() == 0 ? etAb.getHint().toString() : etAb.getText().toString());
     }
 }

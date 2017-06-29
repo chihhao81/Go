@@ -1,9 +1,12 @@
 package go.hao.tw.go.tools;
 
+import android.graphics.Point;
+
 import java.util.HashMap;
 
 import go.hao.tw.go.App;
 import go.hao.tw.go.view.CheckerBoard;
+import go.hao.tw.go.view.GoView;
 
 /**
  * Created by Hao on 2017/6/19.
@@ -15,9 +18,21 @@ public class ToolsBox {
         return App.context.getString(id);
     }
     
-    public static String toSGF(String startContent, HashMap<Integer, CheckerBoard.HistoryInfo> historyInfoList){
+    public static String toSGF(String startContent, int ab, HashMap<Integer, CheckerBoard.HistoryInfo> historyInfoList){
         StringBuilder stringBuilder = new StringBuilder(startContent);
         char[] ary = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's'};
+
+        if(ab > 1) {
+            stringBuilder.append("AB");
+            for(int i = 0; i < ab; i++) {
+                Point point = GoView.POINTS[i];
+                char x = ary[point.x];
+                char y = ary[point.y];
+                stringBuilder.append("[").append(x).append(y).append("]");
+            }
+        }
+        stringBuilder.append("\n");
+
         for(int i = 1; i < historyInfoList.size(); i++){
             CheckerBoard.HistoryInfo info = historyInfoList.get(i);
             if(info == null)

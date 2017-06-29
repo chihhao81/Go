@@ -54,7 +54,7 @@ public class SimulateChess extends BaseDataView implements View.OnTouchListener 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(nowX != -1 && nowY != -1)
-            drawChess(canvas, nowX, nowY, goView.turns % 2 == 0 ? tWhitePaint : tBlackPaint);
+            drawChess(canvas, nowX, nowY, goView.isBlackTurn() ? tBlackPaint : tWhitePaint);
     }
 
     @Override

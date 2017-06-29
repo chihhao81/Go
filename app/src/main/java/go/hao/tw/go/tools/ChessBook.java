@@ -1,6 +1,8 @@
 package go.hao.tw.go.tools;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Hao on 2017/5/27.
@@ -9,6 +11,7 @@ import java.util.HashMap;
 public class ChessBook {
 
     protected HashMap<Integer, ChessBookInfo> hashMap = new HashMap<>();
+    protected List<String> abList = new ArrayList<>();
     protected String bPlayer, wPlayer;
     protected float km = 0; // 貼目
     protected int maxTurns;
@@ -27,6 +30,10 @@ public class ChessBook {
 
     public int getMaxTurns(){
         return maxTurns;
+    }
+
+    public List<String> getAbList(){
+        return abList;
     }
 
     /** 根據手數取得資訊 */

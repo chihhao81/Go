@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import java.util.HashMap;
+import java.util.List;
 
 import go.hao.tw.go.tools.SGFChessBook;
 
@@ -17,16 +18,16 @@ import go.hao.tw.go.tools.SGFChessBook;
 
 public class GoView extends FrameLayout {
 
-    private final Point[] POINTS = new Point[]{
-            new Point(3, 15),
+    public static final Point[] POINTS = new Point[]{
             new Point(15, 3),
+            new Point(3, 15),
             new Point(3, 3),
             new Point(15, 15),
-            new Point(9, 9),
             new Point(3, 9),
             new Point(15, 9),
             new Point(9, 3),
             new Point(9, 15),
+            new Point(9, 9),
     }; // 讓子座標
 
     private CheckerBoard checkerBoard;
@@ -35,6 +36,7 @@ public class GoView extends FrameLayout {
 
     public int turns = 1; // 手數
     private int tryTurns; // 紀錄按下試下時的手數(打譜)
+    private boolean isAb = false; // 是不是讓子棋
 
     public GoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -55,23 +57,32 @@ public class GoView extends FrameLayout {
     public void setChessBook(SGFChessBook chessBook){
         this.chessBook = chessBook;
         simulateChess.setEnabled(false);
+
+        List<String> abList = chessBook.getAbList();
+        if(abList.size() > 0) {
+            isAb = true;
+            for(String position : abList) {
+                int x = position.charAt(0) - SGFChessBook.ASCII_LOW_A;
+                int y = position.charAt(1) - SGFChessBook.ASCII_LOW_A;
+                checkerBoard.setAbPosition(x, y);
+            }
+        }
     }
 
     /** 讓子 */
-    public void setComity(int count){
-        if(count == 0)
-            return;
+    public void setAb(int count){
+        isAb = true;
         for(int i = 0; i < count; i++){
             Point point = POINTS[i];
-            checkerBoard.downHere(point.x, point.y);
-            turns++;
+            if((count == 5 || count == 7) && i == count-1)
+                point = POINTS[POINTS.length-1];
+            checkerBoard.setAbPosition(point.x, point.y);
         }
-        turns--;
     }
 
     /** 黑棋的局? */
     public boolean isBlackTurn(){
-        return turns % 2 == 1;
+        return turns % 2 == (isAb ? 0 : 1);
     }
 
     /** 上N手 */

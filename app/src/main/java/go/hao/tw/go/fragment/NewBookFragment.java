@@ -134,8 +134,8 @@ public class NewBookFragment extends BaseFragment implements View.OnClickListene
                     String path = adapter.getPath();
                     String sgfText = "(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]RU[Japanese]SZ[19]KM[0]"
                             + "PW[" + activity.getString(R.string.default_wp)
-                            + "]PB[" + activity.getString(R.string.default_wp) + "]\n";
-                    sgfText = ToolsBox.toSGF(sgfText, goView.getHistoryList());
+                            + "]PB[" + activity.getString(R.string.default_wp) + "]";
+                    sgfText = ToolsBox.toSGF(sgfText, 0, goView.getHistoryList());
 
                     File file = new File(path, name);
                     file.createNewFile();

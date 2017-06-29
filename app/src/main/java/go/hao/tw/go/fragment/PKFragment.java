@@ -175,8 +175,8 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
                 + pkSettingDialog.getKm() + "]PW["
                 + pkSettingDialog.getWhitePlayer() + "]PB["
                 + pkSettingDialog.getBlackPlayer() + "]RE["
-                + result + "]\n";
-        sgfText = ToolsBox.toSGF(sgfStart, goView.getHistoryList());
+                + result + "]";
+        sgfText = ToolsBox.toSGF(sgfStart, pkSettingDialog.getAb(), goView.getHistoryList());
     }
 
     /** 取消 */
@@ -284,7 +284,13 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
     private DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
         @Override
         public void onDismiss(DialogInterface dialog) {
-            goView.setComity(pkSettingDialog.getComity());
+            int ab = pkSettingDialog.getAb();
+            if(ab > 0) {
+                if(ab == 1)
+                    Toast.makeText(activity, "沒有在讓1子的啦", Toast.LENGTH_SHORT).show();
+                else
+                    goView.setAb(ab);
+            }
         }
     };
 
@@ -335,7 +341,7 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
                 cancel();
                 break;
             case R.id.btnWhitePass: // 白虛手
-                if(goView.turns % 2 == 0) {
+                if(!goView.isBlackTurn()) {
                     goView.pass();
                 } else {
                     tvWhiteInfo.setText(activity.getString(R.string.not_ur_turn));
@@ -345,7 +351,7 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case R.id.btnBlackPass: // 黑虛手
-                if(goView.turns % 2 == 1) {
+                if(goView.isBlackTurn()) {
                     goView.pass();
                 } else {
                     tvBlackInfo.setText(activity.getString(R.string.not_ur_turn));
