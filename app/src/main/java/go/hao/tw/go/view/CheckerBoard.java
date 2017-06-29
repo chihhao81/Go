@@ -16,6 +16,7 @@ public class CheckerBoard extends BaseDataView {
 
     private final float LINE_LENGTH = SPACE * 19; // 線的長度
     private final int[] STARS_POSITION = new int[]{3, 9, 15}; // 星位位置
+
     private final byte BLANK = 0;
     private final byte BLACK = 1;
     private final byte WHITE = 2;
@@ -370,6 +371,7 @@ public class CheckerBoard extends BaseDataView {
         } else if(x == -1 && y == -1) { // 虛手
             setNowXY(-1, -1);
             goView.turns++;
+            historyList.put(goView.turns-1, new HistoryInfo().build());
         }
     }
 
@@ -404,8 +406,21 @@ public class CheckerBoard extends BaseDataView {
         setOnTouchListener(null);
     }
 
+    /** 嘿喲 */
     public HashMap<Integer, HistoryInfo> getHistoryList(){
         return historyList;
+    }
+
+    /** 清空棋盤 */
+    public void clear(){
+        historyList.clear();
+        board = new byte[19][19];
+        ggMode = false;
+        wPlace = 0;
+        bPlace = 0;
+        nowX = -1;
+        nowY = -1;
+        invalidate();
     }
 
     /** 輸贏啦 */
@@ -425,11 +440,13 @@ public class CheckerBoard extends BaseDataView {
 
         // 過程中的提子
         for(int i = 1; i < goView.turns-2; i++){
-            int eat = historyList.get(i).eat;
-            if(i % 2 == BLACK)
-                wPlace += eat;
+            HistoryInfo info = historyList.get(i);
+            if(info.x == -1 || info.y == -1)
+                continue;
+            if(info.black)
+                bPlace += info.eat;
             else
-                bPlace += eat;
+                wPlace += info.eat;
         }
 
         for(int i = 0; i < board.length; i++) {
@@ -479,6 +496,7 @@ public class CheckerBoard extends BaseDataView {
 
     /** 歷史紀錄 */
     public class HistoryInfo{
+        public boolean black;
         public int x, y;
         byte[][] board;
         int eat;
@@ -488,6 +506,7 @@ public class CheckerBoard extends BaseDataView {
             y = nowY;
             eat = CheckerBoard.this.eat;
             board = copyIndexBoard(-1);
+            black = !goView.isBlackTurn(); // 因為手數已經++了
             return this;
         }
     }

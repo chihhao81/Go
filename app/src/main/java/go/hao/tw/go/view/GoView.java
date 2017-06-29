@@ -67,6 +67,7 @@ public class GoView extends FrameLayout {
                 checkerBoard.setAbPosition(x, y);
             }
         }
+        checkerBoard.invalidate();
     }
 
     /** 讓子 */
@@ -83,6 +84,13 @@ public class GoView extends FrameLayout {
     /** 黑棋的局? */
     public boolean isBlackTurn(){
         return turns % 2 == (isAb ? 0 : 1);
+    }
+
+    /** 清空棋盤 */
+    public void clear(){
+        turns = 1;
+        isAb = false;
+        checkerBoard.clear();
     }
 
     /** 上N手 */

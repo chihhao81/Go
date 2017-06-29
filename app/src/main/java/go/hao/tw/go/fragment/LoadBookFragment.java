@@ -123,7 +123,7 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
         if(llSelectFile.isShown())
             return adapter.back();
         else {
-            goView.last(goView.turns);
+            goView.clear();
             llSelectFile.setVisibility(View.VISIBLE);
             return false;
         }

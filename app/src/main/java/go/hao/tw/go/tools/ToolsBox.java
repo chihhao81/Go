@@ -40,7 +40,7 @@ public class ToolsBox {
             if(info == null)
                 break;
 
-            char who = i%2 == 1 ? 'B' : 'W';
+            char who = info.black ? 'B' : 'W';
             if(info.x == -1 || info.y == -1) {
                 stringBuilder.append(";").append(who).append("[]\n");
                 continue;
