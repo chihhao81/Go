@@ -26,6 +26,8 @@ public class ToolsBox {
             stringBuilder.append("AB");
             for(int i = 0; i < ab; i++) {
                 Point point = GoView.POINTS[i];
+                if((ab == 5 || ab == 7) && i == ab-1)
+                    point = GoView.POINTS[GoView.POINTS.length-1];
                 char x = ary[point.x];
                 char y = ary[point.y];
                 stringBuilder.append("[").append(x).append(y).append("]");
