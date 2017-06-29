@@ -26,7 +26,8 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public final static int REQUEST_CODE_LOADFRAGMENT = 0;
-    public final static int REQUEST_CODE_PKFRAGMENT = 0;
+    public final static int REQUEST_CODE_PKFRAGMENT = 1;
+    public final static int REQUEST_CODE_NEWFRAGMENT = 2;
 
     private FragmentManager fragmentManager;
 
@@ -79,11 +80,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fragmentManager.beginTransaction().replace(R.id.flContains, new LoadBookFragment()).addToBackStack("").commitAllowingStateLoss();
                 else
                     flContains.setVisibility(View.GONE);
-            } else if(permission.equals(READ_EXTERNAL_STORAGE) && requestCode == REQUEST_CODE_PKFRAGMENT) {
+            } else if(permission.equals(READ_EXTERNAL_STORAGE)) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     for(Fragment fragment : fragmentManager.getFragments()) {
                         if (fragment != null && fragment instanceof PKFragment) {
                             ((PKFragment) fragment).showSelectPath();
+                            break;
+                        } else if(fragment != null && fragment instanceof NewBookFragment){
+                            ((NewBookFragment) fragment).showSelectPath();
                             break;
                         }
                     }

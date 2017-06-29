@@ -1,6 +1,7 @@
 package go.hao.tw.go.view;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -16,10 +17,21 @@ import go.hao.tw.go.tools.SGFChessBook;
 
 public class GoView extends FrameLayout {
 
-    private SGFChessBook chessBook;
+    private final Point[] POINTS = new Point[]{
+            new Point(3, 15),
+            new Point(15, 3),
+            new Point(3, 3),
+            new Point(15, 15),
+            new Point(9, 9),
+            new Point(3, 9),
+            new Point(15, 9),
+            new Point(9, 3),
+            new Point(9, 15),
+    }; // 讓子座標
 
     private CheckerBoard checkerBoard;
     private SimulateChess simulateChess;
+    private SGFChessBook chessBook;
 
     public int turns = 1; // 手數
     private int tryTurns; // 紀錄按下試下時的手數(打譜)
@@ -43,6 +55,18 @@ public class GoView extends FrameLayout {
     public void setChessBook(SGFChessBook chessBook){
         this.chessBook = chessBook;
         simulateChess.setEnabled(false);
+    }
+
+    /** 讓子 */
+    public void setComity(int count){
+        if(count == 0)
+            return;
+        for(int i = 0; i < count; i++){
+            Point point = POINTS[i];
+            checkerBoard.downHere(point.x, point.y);
+            turns++;
+        }
+        turns--;
     }
 
     /** 黑棋的局? */

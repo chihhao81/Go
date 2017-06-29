@@ -102,6 +102,7 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
         recyclerView.setAdapter(adapter);
 
         pkSettingDialog = new PKSettingDialog(activity);
+        pkSettingDialog.setOnDismissListener(onDismissListener);
         pkSettingDialog.show();
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(App.screenWidth, App.screenWidth);
@@ -109,17 +110,17 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
         goView.setLayoutParams(params);
 
         int space = (int)BaseDataView.SPACE;
-        int height = (App.screenHeight - App.screenWidth) / 2 - space*2;
+        int height = App.screenWidth / 4 - space*2;
         params = new RelativeLayout.LayoutParams(height, height);
         params.addRule(RelativeLayout.ABOVE, R.id.goView);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        params.setMargins(space, 0, 0, 0);
+        params.setMargins(space, space, 0, 0);
         ivWhite.setLayoutParams(params);
 
         params = new RelativeLayout.LayoutParams(height, height);
         params.addRule(RelativeLayout.BELOW, R.id.goView);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params.setMargins(0, 0, space, 0);
+        params.setMargins(0, 0, space, space);
         ivBlack.setLayoutParams(params);
 
         goView.setOnTurnOverListener(onTurnOverListener);
@@ -279,12 +280,23 @@ public class PKFragment extends BaseFragment implements View.OnClickListener {
         }
     };
 
+    /** 設定dialog關閉監聽 */
+    private DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            goView.setComity(pkSettingDialog.getComity());
+        }
+    };
+
     @Override
     public boolean onBackPressed() {
-        if(llSelectPath.isShown())
-            return adapter.back();
-        else
+        if(llSelectPath.isShown()) {
+            if(adapter.back())
+                llSelectPath.setVisibility(View.GONE);
+            return false;
+        } else {
             return true;
+        }
     }
 
     @Override

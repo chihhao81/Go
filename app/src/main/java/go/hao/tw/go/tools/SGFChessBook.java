@@ -134,8 +134,11 @@ public class SGFChessBook extends ChessBook{
         if(!time.isEmpty())
             result.append(time).append("\n");
         // 貼目
-        km = Float.parseFloat(getStringValue(str, KM));
-        result.append(App.context.getString(R.string.info_km)).append(km).append("\n");
+        String skm = getStringValue(str, KM);
+        if(!skm.isEmpty()) {
+            km = Float.parseFloat(skm);
+            result.append(App.context.getString(R.string.info_km)).append(km).append("\n");
+        }
         // 比賽結果
         if(!getStringValue(str, RE).isEmpty())
             result.append(App.context.getString(R.string.info_re)).append(getStringValue(str, RE));
