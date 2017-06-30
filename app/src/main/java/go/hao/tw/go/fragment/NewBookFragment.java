@@ -132,9 +132,9 @@ public class NewBookFragment extends BaseFragment implements View.OnClickListene
                 try{
                     String name = transTime(System.currentTimeMillis())+".sgf";
                     String path = adapter.getPath();
-                    String sgfText = "(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]RU[Japanese]SZ[19]KM[0]"
+                    String sgfText = "(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]RU[Japanese]SZ[19]KM[6.5]"
                             + "PW[" + activity.getString(R.string.default_wp)
-                            + "]PB[" + activity.getString(R.string.default_wp) + "]";
+                            + "]PB[" + activity.getString(R.string.default_bp) + "]";
                     sgfText = ToolsBox.toSGF(sgfText, 0, goView.getHistoryList());
 
                     File file = new File(path, name);

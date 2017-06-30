@@ -8,6 +8,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/icon_board_back"
         android:clickable="true"
+        android:gravity="center"
         android:orientation="vertical">
 
         <go.hao.tw.go.view.GoView

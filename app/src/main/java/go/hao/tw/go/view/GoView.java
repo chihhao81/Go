@@ -86,6 +86,11 @@ public class GoView extends FrameLayout {
         return turns % 2 == (isAb ? 0 : 1);
     }
 
+    /** 是不是正在試下 */
+    public boolean isTrying(){
+        return simulateChess.isEnabled();
+    }
+
     /** 清空棋盤 */
     public void clear(){
         turns = 1;
@@ -96,10 +101,12 @@ public class GoView extends FrameLayout {
     /** 上N手 */
     public void last(int n){
         turns = turns > n ? turns-n : 1;
+        if(isTrying() && turns < tryTurns)
+            tryTurns = turns;
         checkerBoard.recovery(turns);
     }
 
-    /** 下N步 */
+    /** 下N手 */
     public void next(int next){
         for(int i = 0; i < next; i++){
             SGFChessBook.ChessBookInfo info = chessBook.getChessBookInfo(turns);
@@ -111,7 +118,7 @@ public class GoView extends FrameLayout {
 
     /** 試下 */
     public void setTry(){
-        if(simulateChess.isEnabled()){ // 結束試下
+        if(isTrying()){ // 結束試下
             turns = tryTurns;
             checkerBoard.recovery(tryTurns);
             simulateChess.setEnabled(false);

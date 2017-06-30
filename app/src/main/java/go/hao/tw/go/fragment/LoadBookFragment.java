@@ -133,20 +133,18 @@ public class LoadBookFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnInit: // 清空
-                if(isTrying())
-                    return;
                 goView.last(goView.turns);
                 tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns-1));
+                if(goView.isTrying()) {
+                    goView.setTry();
+                    btnTry.setSelected(false);
+                }
                 break;
             case R.id.btnLastFive: // 前五手
-                if(isTrying())
-                    return;
                 goView.last(5);
                 tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns-1));
                 break;
             case R.id.btnLast: // 前一手
-                if(isTrying())
-                    return;
                 goView.last(1);
                 tvInfo.setText(chessBook.getMsg(goView.turns == 1 ? 0 : goView.turns-1));
                 break;
