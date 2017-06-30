@@ -63,10 +63,6 @@ public class NewBookFragment extends BaseFragment implements View.OnClickListene
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
 
         goView.setLayoutParams(new LinearLayout.LayoutParams(App.screenWidth, App.screenWidth));
-        adapter = new SelectPathAdapter(activity);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.addItemDecoration(new SpacesItemDecoration(0, 1, 0, 1));
-        recyclerView.setAdapter(adapter);
 
         btnLast.setOnClickListener(this);
         btnPass.setOnClickListener(this);
@@ -76,6 +72,12 @@ public class NewBookFragment extends BaseFragment implements View.OnClickListene
 
     /** 選擇路徑 */
     public void showSelectPath(){
+        if(adapter == null) {
+            adapter = new SelectPathAdapter(activity);
+            recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+            recyclerView.addItemDecoration(new SpacesItemDecoration(0, 1, 0, 1));
+            recyclerView.setAdapter(adapter);
+        }
         llSelectPath.setVisibility(View.VISIBLE);
     }
 
